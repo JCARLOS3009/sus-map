@@ -1,0 +1,177 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+
+    // ══ HOSPITAIS ══
+    
+    {
+      "type": "Feature",
+      "properties": { "id": 2, "nome": "Hospital do Subúrbio", "tipo": "hospital", "bairro": "Periperi", "endereco": "Rua das Pedrinhas, s/n", "telefone": "(71) 3217-8600", "distrito": "Subúrbio Ferroviário" },
+      "geometry": { "type": "Point", "coordinates": [-38.5200, -12.8760] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 3, "nome": "Hospital Especializado Octávio Mangabeira (HEOM)", "tipo": "hospital", "bairro": "Pau Miúdo", "endereco": "Praça Conselheiro João Alfredo, s/n", "telefone": "(71) 3117-1610", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5060, -12.9750] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 4, "nome": "Hospital Geral Ernesto Simões Filho (HGESF)", "tipo": "hospital", "bairro": "Caixa D'Água", "endereco": "Praça Conselheiro João Alfredo, s/n", "telefone": "(71) 3117-1600", "distrito": "Centro Histórico" },
+      "geometry": { "type": "Point", "coordinates": [-38.4840, -12.9430] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 5, "nome": "Hospital Municipal de Salvador (HMS)", "tipo": "hospital", "bairro": "Cajazeiras", "endereco": "R. Ver. Zezéu Ribeiro, s/n", "telefone": "(71) 3202-3500", "distrito": "Cajazeiras" },
+      "geometry": { "type": "Point", "coordinates": [-38.4018, -12.9078] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 6, "nome": "Hospital da Mulher (HM)", "tipo": "hospital", "bairro": "Roma", "endereco": "Rua Barão de Cotegipe, 1153", "telefone": "0800 071 4000", "distrito": "Itapagipe" },
+      "geometry": { "type": "Point", "coordinates": [-38.5048, -12.9316] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 7, "nome": "HUPES – Hospital Universitário Prof. Edgard Santos", "tipo": "hospital", "bairro": "Canela", "endereco": "R. Dr. Augusto Viana, s/n", "telefone": "(71) 3283-8000", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5105, -13.0028] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 8, "nome": "Hospital Couto Maia (HCMBA)", "tipo": "hospital", "bairro": "Brotas", "endereco": "Av. Vasco da Gama, s/n", "telefone": "(71) 3117-2600", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5070, -12.9848] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 9, "nome": "Hospital Ana Nery", "tipo": "hospital", "bairro": "Caixa D'Água", "endereco": "R. Saldanha Marinho, s/n", "telefone": "(71) 3117-1700", "distrito": "Centro Histórico" },
+      "geometry": { "type": "Point", "coordinates": [-38.4900, -12.9440] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 10, "nome": "Hospital Geral do Estado (HGE)", "tipo": "hospital", "bairro": "Vasco da Gama", "endereco": "Av. Vasco da Gama, s/n", "telefone": "(71) 3117-7500", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5036, -12.9882] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 11, "nome": "Hospital Manoel Victorino", "tipo": "hospital", "bairro": "IAPI", "endereco": "R. Conde de Porto Alegre, 11", "telefone": "(71) 3117-1900", "distrito": "Itapagipe" },
+      "geometry": { "type": "Point", "coordinates": [-38.4832, -12.9258] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 12, "nome": "Hospital Santa Izabel", "tipo": "hospital", "bairro": "Nazaré", "endereco": "Praça Almeida Couto, s/n", "telefone": "(71) 3243-7000", "distrito": "Centro Histórico" },
+      "geometry": { "type": "Point", "coordinates": [-38.5163, -12.9690] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 13, "nome": "Hospital São Rafael", "tipo": "hospital", "bairro": "São Marcos", "endereco": "Av. São Rafael, 2152", "telefone": "(71) 3281-6000", "distrito": "Cabula/Beiru" },
+      "geometry": { "type": "Point", "coordinates": [-38.4380, -12.9503] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 14, "nome": "Hospital Espanhol", "tipo": "hospital", "bairro": "Barra", "endereco": "Av. Sete de Setembro, 4161", "telefone": "(71) 3264-1100", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5210, -13.0095] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 15, "nome": "Hospital Aliança", "tipo": "hospital", "bairro": "Rio Vermelho", "endereco": "R. da Fonte do Boi, 216", "telefone": "(71) 2108-5000", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4925, -13.0063] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 16, "nome": "Hospital Português", "tipo": "hospital", "bairro": "Canela", "endereco": "Av. Princesa Isabel, 214", "telefone": "(71) 2107-7000", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5118, -13.0010] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 17, "nome": "IPERBA – Instituto de Perinatologia da Bahia", "tipo": "hospital", "bairro": "Brotas", "endereco": "R. Teixeira de Barros, 72", "telefone": "(71) 3116-5216", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4958, -12.9928] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 18, "nome": "Hospital Univers. Presidente Dutra (HUPD)", "tipo": "hospital", "bairro": "Federação", "endereco": "Av. Cardeal da Silva, 340", "telefone": "(71) 3283-5555", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5030, -12.9985] }
+    },
+
+    // ══ UPAs ══
+    {
+      "type": "Feature",
+      "properties": { "id": 20, "nome": "UPA 24h – Cajazeiras", "tipo": "upa", "bairro": "Cajazeiras", "endereco": "R. Cel. Azevedo, s/n", "telefone": "(71) 3627-8686", "distrito": "Cajazeiras" },
+      "geometry": { "type": "Point", "coordinates": [-38.4070, -12.9090] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 21, "nome": "UPA 24h – Brotas", "tipo": "upa", "bairro": "Brotas", "endereco": "Av. Dom João VI, 332", "telefone": "(71) 3272-0880", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4878, -12.9938] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 22, "nome": "UPA 24h – Pirajá", "tipo": "upa", "bairro": "Santo Inácio", "endereco": "R. Oito de Novembro, s/n", "telefone": "(71) 3117-2544", "distrito": "Cabula/Beiru" },
+      "geometry": { "type": "Point", "coordinates": [-38.4380, -12.9278] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 23, "nome": "UPA 24h – Plataforma", "tipo": "upa", "bairro": "Plataforma", "endereco": "R. Antônio Balbino, s/n", "telefone": "(71) 3398-3035", "distrito": "Subúrbio Ferroviário" },
+      "geometry": { "type": "Point", "coordinates": [-38.5218, -12.8916] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 24, "nome": "UPA 24h – Pau da Lima", "tipo": "upa", "bairro": "Pau da Lima", "endereco": "Av. San Martin, s/n", "telefone": "(71) 3627-8700", "distrito": "Pau da Lima" },
+      "geometry": { "type": "Point", "coordinates": [-38.4218, -12.9228] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 25, "nome": "UPA 24h – Itapuã", "tipo": "upa", "bairro": "Itapuã", "endereco": "Av. Luís Viana Filho, s/n", "telefone": "(71) 3217-8650", "distrito": "Itapuã/Ipitanga" },
+      "geometry": { "type": "Point", "coordinates": [-38.3458, -12.9543] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 26, "nome": "UPA 24h – Valéria", "tipo": "upa", "bairro": "Valéria", "endereco": "Estrada de Valéria, s/n", "telefone": "(71) 3627-9000", "distrito": "Cabula/Beiru" },
+      "geometry": { "type": "Point", "coordinates": [-38.4240, -12.8853] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 27, "nome": "UPA 24h – Boca do Rio", "tipo": "upa", "bairro": "Boca do Rio", "endereco": "R. Jaime Sapolnik, s/n", "telefone": "(71) 3273-4699", "distrito": "Itapuã/Ipitanga" },
+      "geometry": { "type": "Point", "coordinates": [-38.4245, -12.9728] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 28, "nome": "UPA 24h – Escada (Subúrbio)", "tipo": "upa", "bairro": "Escada", "endereco": "R. da Escada, s/n", "telefone": "(71) 3116-2900", "distrito": "Subúrbio Ferroviário" },
+      "geometry": { "type": "Point", "coordinates": [-38.5386, -12.8638] }
+    },
+
+    // ══ UBS / USF ══
+    {
+      "type": "Feature",
+      "properties": { "id": 40, "nome": "UBS Barra", "tipo": "ubs", "bairro": "Barra", "endereco": "Av. Sete de Setembro, 3800", "telefone": "(71) 3264-7400", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5280, -13.0120] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 41, "nome": "UBS Rio Vermelho", "tipo": "ubs", "bairro": "Rio Vermelho", "endereco": "R. Borges dos Reis, 12", "telefone": "(71) 3334-2186", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4988, -13.0042] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 42, "nome": "UBS Federação", "tipo": "ubs", "bairro": "Federação", "endereco": "Av. Cardeal da Silva, 215", "telefone": "(71) 3283-2000", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.5022, -12.9975] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 43, "nome": "USF Nordeste de Amaralina", "tipo": "ubs", "bairro": "Nordeste de Amaralina", "endereco": "R. Mucugê, s/n", "telefone": "(71) 3334-4510", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4768, -13.0108] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 44, "nome": "UBS Pituba", "tipo": "ubs", "bairro": "Pituba", "endereco": "R. Des. Paulo Gaudenzi, s/n", "telefone": "(71) 3453-5500", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4588, -12.9888] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 45, "nome": "UBS Itaigara", "tipo": "ubs", "bairro": "Itaigara", "endereco": "R. Visc. do Rio Branco, 50", "telefone": "(71) 3453-1200", "distrito": "Barra/Rio Vermelho" },
+      "geometry": { "type": "Point", "coordinates": [-38.4585, -12.9820] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "id": 46, "nome": "UBS Sussuarana", "tipo": "ubs", "bairro": "Sussuarana", "endereco": "Av. Sussuarana, s/n", "telefone": "(71) 3596-8380", "distrito": "Cabula/Beiru" },
+      "geometry": { "type": "Point", "coordinates": [-38.4278, -12.9478] }
+    }
+  ]
+}
