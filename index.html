@@ -85,195 +85,72 @@
 <script>
 // ─── DADOS: Unidades de Saúde de Salvador ─────────────────────────────────────
 const unidades = [
-  // ══ HOSPITAIS ══
-  { id:1, nome:"Hospital Geral Roberto Santos (HGRS)", tipo:"hospital", bairro:"Cabula", endereco:"Estrada do Saboeiro, s/n", telefone:"0800 071 3535", distrito:"Cabula/Beiru", lat:-12.9632, lng:-38.4520, fichaUrl:"fichaEstabelecimento.html" },
-  { id:2, nome:"Hospital do Subúrbio", tipo:"hospital", bairro:"Periperi", endereco:"Rua das Pedrinhas, s/n", telefone:"(71) 3217-8600", distrito:"Subúrbio Ferroviário", lat:-12.8760, lng:-38.5200 },
-  { id:3, nome:"Hospital Especializado Octávio Mangabeira (HEOM)", tipo:"hospital", bairro:"Pau Miúdo", endereco:"Praça Conselheiro João Alfredo, s/n", telefone:"(71) 3117-1610", distrito:"Barra/Rio Vermelho", lat:-12.9750, lng:-38.5060 },
-  { id:4, nome:"Hospital Geral Ernesto Simões Filho (HGESF)", tipo:"hospital", bairro:"Caixa D'Água", endereco:"Praça Conselheiro João Alfredo, s/n", telefone:"(71) 3117-1600", distrito:"Centro Histórico", lat:-12.9430, lng:-38.4840 },
-  { id:5, nome:"Hospital Municipal de Salvador (HMS)", tipo:"hospital", bairro:"Cajazeiras", endereco:"R. Ver. Zezéu Ribeiro, s/n", telefone:"(71) 3202-3500", distrito:"Cajazeiras", lat:-12.9078, lng:-38.4018 },
-  { id:6, nome:"Hospital da Mulher (HM)", tipo:"hospital", bairro:"Roma", endereco:"Rua Barão de Cotegipe, 1153", telefone:"0800 071 4000", distrito:"Itapagipe", lat:-12.9316, lng:-38.5048 },
-  { id:7, nome:"HUPES – Hospital Universitário Prof. Edgard Santos", tipo:"hospital", bairro:"Canela", endereco:"R. Dr. Augusto Viana, s/n", telefone:"(71) 3283-8000", distrito:"Barra/Rio Vermelho", lat:-13.0028, lng:-38.5105 },
-  { id:8, nome:"Hospital Couto Maia (HCMBA)", tipo:"hospital", bairro:"Brotas", endereco:"Av. Vasco da Gama, s/n", telefone:"(71) 3117-2600", distrito:"Barra/Rio Vermelho", lat:-12.9848, lng:-38.5070 },
-  { id:9, nome:"Hospital Ana Nery", tipo:"hospital", bairro:"Caixa D'Água", endereco:"R. Saldanha Marinho, s/n", telefone:"(71) 3117-1700", distrito:"Centro Histórico", lat:-12.9440, lng:-38.4900 },
-  { id:10, nome:"Hospital Geral do Estado (HGE)", tipo:"hospital", bairro:"Vasco da Gama", endereco:"Av. Vasco da Gama, s/n", telefone:"(71) 3117-7500", distrito:"Barra/Rio Vermelho", lat:-12.9882, lng:-38.5036 },
-  { id:11, nome:"Hospital Manoel Victorino", tipo:"hospital", bairro:"IAPI", endereco:"R. Conde de Porto Alegre, 11", telefone:"(71) 3117-1900", distrito:"Itapagipe", lat:-12.9258, lng:-38.4832 },
-  { id:12, nome:"Hospital Santa Izabel", tipo:"hospital", bairro:"Nazaré", endereco:"Praça Almeida Couto, s/n", telefone:"(71) 3243-7000", distrito:"Centro Histórico", lat:-12.9690, lng:-38.5163 },
-  { id:13, nome:"Hospital São Rafael", tipo:"hospital", bairro:"São Marcos", endereco:"Av. São Rafael, 2152", telefone:"(71) 3281-6000", distrito:"Cabula/Beiru", lat:-12.9503, lng:-38.4380 },
-  { id:14, nome:"Hospital Espanhol", tipo:"hospital", bairro:"Barra", endereco:"Av. Sete de Setembro, 4161", telefone:"(71) 3264-1100", distrito:"Barra/Rio Vermelho", lat:-13.0095, lng:-38.5210 },
-  { id:15, nome:"Hospital Aliança", tipo:"hospital", bairro:"Rio Vermelho", endereco:"R. da Fonte do Boi, 216", telefone:"(71) 2108-5000", distrito:"Barra/Rio Vermelho", lat:-13.0063, lng:-38.4925 },
-  { id:16, nome:"Hospital Português", tipo:"hospital", bairro:"Canela", endereco:"Av. Princesa Isabel, 214", telefone:"(71) 2107-7000", distrito:"Barra/Rio Vermelho", lat:-13.0010, lng:-38.5118 },
-  { id:17, nome:"IPERBA – Instituto de Perinatologia da Bahia", tipo:"hospital", bairro:"Brotas", endereco:"R. Teixeira de Barros, 72", telefone:"(71) 3116-5216", distrito:"Barra/Rio Vermelho", lat:-12.9928, lng:-38.4958 },
-  { id:18, nome:"Hospital Univers. Presidente Dutra (HUPD)", tipo:"hospital", bairro:"Federação", endereco:"Av. Cardeal da Silva, 340", telefone:"(71) 3283-5555", distrito:"Barra/Rio Vermelho", lat:-12.9985, lng:-38.5030 },
-
-  // ══ UPAs ══
-  { id:20, nome:"UPA 24h – Cajazeiras", tipo:"upa", bairro:"Cajazeiras", endereco:"R. Cel. Azevedo, s/n", telefone:"(71) 3627-8686", distrito:"Cajazeiras", lat:-12.9090, lng:-38.4070 },
-  { id:21, nome:"UPA 24h – Brotas", tipo:"upa", bairro:"Brotas", endereco:"Av. Dom João VI, 332", telefone:"(71) 3272-0880", distrito:"Barra/Rio Vermelho", lat:-12.9938, lng:-38.4878 },
-  { id:22, nome:"UPA 24h – Pirajá", tipo:"upa", bairro:"Santo Inácio", endereco:"R. Oito de Novembro, s/n", telefone:"(71) 3117-2544", distrito:"Cabula/Beiru", lat:-12.9278, lng:-38.4380 },
-  { id:23, nome:"UPA 24h – Plataforma", tipo:"upa", bairro:"Plataforma", endereco:"R. Antônio Balbino, s/n", telefone:"(71) 3398-3035", distrito:"Subúrbio Ferroviário", lat:-12.8916, lng:-38.5218 },
-  { id:24, nome:"UPA 24h – Pau da Lima", tipo:"upa", bairro:"Pau da Lima", endereco:"Av. San Martin, s/n", telefone:"(71) 3627-8700", distrito:"Pau da Lima", lat:-12.9228, lng:-38.4218 },
-  { id:25, nome:"UPA 24h – Itapuã", tipo:"upa", bairro:"Itapuã", endereco:"Av. Luís Viana Filho, s/n", telefone:"(71) 3217-8650", distrito:"Itapuã/Ipitanga", lat:-12.9543, lng:-38.3458 },
-  { id:26, nome:"UPA 24h – Valéria", tipo:"upa", bairro:"Valéria", endereco:"Estrada de Valéria, s/n", telefone:"(71) 3627-9000", distrito:"Cabula/Beiru", lat:-12.8853, lng:-38.4240 },
-  { id:27, nome:"UPA 24h – Boca do Rio", tipo:"upa", bairro:"Boca do Rio", endereco:"R. Jaime Sapolnik, s/n", telefone:"(71) 3273-4699", distrito:"Itapuã/Ipitanga", lat:-12.9728, lng:-38.4245 },
-  { id:28, nome:"UPA 24h – Escada (Subúrbio)", tipo:"upa", bairro:"Escada", endereco:"R. da Escada, s/n", telefone:"(71) 3116-2900", distrito:"Subúrbio Ferroviário", lat:-12.8638, lng:-38.5386 },
+// ══ UPAs ══ (coordenadas verificadas e corrigidas via Google Maps)
+  { id:20, nome:"UPA 24h – Cajazeiras", tipo:"upa", bairro:"Cajazeiras VIII", endereco:"R. Dep. Herculano Menezes, 81", telefone:"(71) 3627-8686", distrito:"Cajazeiras", lat:-12.8994319, lng:-38.4125670 },
+  { id:21, nome:"UPA 24h – Brotas", tipo:"upa", bairro:"Campinas de Brotas", endereco:"R. Jardim Madalena, s/n", telefone:"(71) 3272-0880", distrito:"Barra/Rio Vermelho", lat:-12.9864154, lng:-38.4801717 },
+  { id:22, nome:"UPA 24h – Pirajá", tipo:"upa", bairro:"Jardim Santo Inácio", endereco:"R. Direta de Santo Inácio, s/n", telefone:"(71) 3117-2544", distrito:"Cabula/Beiru", lat:-12.9265608, lng:-38.4609509 },
+  { id:23, nome:"UPA 24h – Plataforma", tipo:"upa", bairro:"Plataforma", endereco:"R. Antônio Balbino, s/n", telefone:"(71) 3398-3035", distrito:"Subúrbio Ferroviário", lat:-12.8943089, lng:-38.4872304 },
+  { id:24, nome:"UPA 24h – Pau da Lima", tipo:"upa", bairro:"Santa Mônica", endereco:"R. do Forno, s/n", telefone:"(71) 3627-8700", distrito:"Pau da Lima", lat:-12.9469689, lng:-38.4810893 },
+  { id:25, nome:"UPA 24h – Itapuã", tipo:"upa", bairro:"Itapuã", endereco:"R. da Cacimba, S/N", telefone:"(71) 3217-8650", distrito:"Itapuã/Ipitanga", lat:-12.9489895, lng:-38.3663472 },
+  { id:26, nome:"UPA 24h – Valéria", tipo:"upa", bairro:"Valéria", endereco:"R. do Lavrador, s/n", telefone:"(71) 3627-9000", distrito:"Cabula/Beiru", lat:-12.8646079, lng:-38.4372461 },
+  { id:27, nome:"UPA 24h – Boca do Rio", tipo:"upa", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-4699", distrito:"Itapuã/Ipitanga", lat:-12.9732882, lng:-38.4320575 },
+  { id:28, nome:"UPA 24h – Escada (Subúrbio)", tipo:"upa", bairro:"Itacaranha", endereco:"Itacaranha, s/n", telefone:"(71) 3116-2900", distrito:"Subúrbio Ferroviário", lat:-12.8822440, lng:-38.4813986 },
 
   // ══ UBS / USF ══
-  { id:40, nome:"UBS Barra", tipo:"ubs", bairro:"Barra", endereco:"Av. Sete de Setembro, 3800", telefone:"(71) 3264-7400", distrito:"Barra/Rio Vermelho", lat:-13.0120, lng:-38.5280 },
-  { id:41, nome:"UBS Rio Vermelho", tipo:"ubs", bairro:"Rio Vermelho", endereco:"R. Borges dos Reis, 12", telefone:"(71) 3334-2186", distrito:"Barra/Rio Vermelho", lat:-13.0042, lng:-38.4988 },
-  { id:42, nome:"UBS Federação", tipo:"ubs", bairro:"Federação", endereco:"Av. Cardeal da Silva, 215", telefone:"(71) 3283-2000", distrito:"Barra/Rio Vermelho", lat:-12.9975, lng:-38.5022 },
+  { id:40, nome:"UBS Barra", tipo:"ubs", bairro:"Barra", endereco:"Av. Sete de Setembro, 3800", telefone:"(71) 3264-7400", distrito:"Barra/Rio Vermelho", lat:-13.0042571, lng:-38.5330617 },
+  { id:41, nome:"UBS Rio Vermelho", tipo:"ubs", bairro:"Rio Vermelho", endereco:"Av. Oceânica, 4015", telefone:"(71) 3334-2186", distrito:"Barra/Rio Vermelho", lat:-13.010169, lng:-38.4968854 },
+  { id:42, nome:"UBS Federação", tipo:"ubs", bairro:"Federação", endereco:"Av. Cardeal da Silva, s/n", telefone:"(71) 3283-2000", distrito:"Barra/Rio Vermelho", lat:-13.0019021, lng:-38.5016134 },
   { id:43, nome:"USF Nordeste de Amaralina", tipo:"ubs", bairro:"Nordeste de Amaralina", endereco:"R. Mucugê, s/n", telefone:"(71) 3334-4510", distrito:"Barra/Rio Vermelho", lat:-13.0108, lng:-38.4768 },
   { id:44, nome:"UBS Pituba", tipo:"ubs", bairro:"Pituba", endereco:"R. Des. Paulo Gaudenzi, s/n", telefone:"(71) 3453-5500", distrito:"Barra/Rio Vermelho", lat:-12.9888, lng:-38.4588 },
   { id:45, nome:"UBS Itaigara", tipo:"ubs", bairro:"Itaigara", endereco:"R. Visc. do Rio Branco, 50", telefone:"(71) 3453-1200", distrito:"Barra/Rio Vermelho", lat:-12.9820, lng:-38.4585 },
-  { id:46, nome:"UBS Sussuarana", tipo:"ubs", bairro:"Sussuarana", endereco:"Av. Sussuarana, s/n", telefone:"(71) 3596-8380", distrito:"Cabula/Beiru", lat:-12.9478, lng:-38.4278 },
-  { id:47, nome:"USF Cabula VI", tipo:"ubs", bairro:"Cabula", endereco:"R. Direta do Cabula, s/n", telefone:"(71) 3273-1520", distrito:"Cabula/Beiru", lat:-12.9558, lng:-38.4400 },
-  { id:48, nome:"UBS Narandiba", tipo:"ubs", bairro:"Narandiba", endereco:"Av. Edgard Santos, s/n", telefone:"(71) 3596-7990", distrito:"Cabula/Beiru", lat:-12.9658, lng:-38.4490 },
+  { id:46, nome:"UBS Sussuarana", tipo:"ubs", bairro:"Novo Horizonte", endereco:"Av. Ulysses Guimarães, 4072", telefone:"(71) 3596-8380", distrito:"Cabula/Beiru", lat:-12.9331418, lng:-38.4452976 },
+  { id:47, nome:"USF Cabula VI", tipo:"ubs", bairro:"Cabula VI", endereco:"Estr. da Cachoeirinha, s/n", telefone:"(71) 3273-1520", distrito:"Cabula/Beiru", lat:-12.9541722, lng:-38.4378603 },
+  { id:48, nome:"UBS Narandiba", tipo:"ubs", bairro:"Narandiba", endereco:"Av. Edgard Santos, s/n", telefone:"(71) 3596-7990", distrito:"Cabula/Beiru", lat:-12.9563286, lng:-38.4435515 },
   { id:49, nome:"USF Saboeiro", tipo:"ubs", bairro:"Saboeiro", endereco:"R. Direta do Saboeiro, s/n", telefone:"(71) 3593-0110", distrito:"Cabula/Beiru", lat:-12.9618, lng:-38.4558 },
-  { id:50, nome:"UBS Pernambués", tipo:"ubs", bairro:"Pernambués", endereco:"R. da Pernambués, s/n", telefone:"(71) 3457-0510", distrito:"Cabula/Beiru", lat:-12.9498, lng:-38.4470 },
-  { id:51, nome:"USF Engenho Velho de Brotas", tipo:"ubs", bairro:"Engenho Velho de Brotas", endereco:"R. Xavante, s/n", telefone:"(71) 3272-6218", distrito:"Barra/Rio Vermelho", lat:-12.9938, lng:-38.4758 },
-  { id:52, nome:"UBS Pau da Lima", tipo:"ubs", bairro:"Pau da Lima", endereco:"R. Capanema, s/n", telefone:"(71) 3627-1080", distrito:"Pau da Lima", lat:-12.9268, lng:-38.4160 },
-  { id:53, nome:"USF São Marcos", tipo:"ubs", bairro:"São Marcos", endereco:"Av. São Marcos, 162", telefone:"(71) 3273-4220", distrito:"Cabula/Beiru", lat:-12.9468, lng:-38.4320 },
-  { id:54, nome:"UBS Cajazeiras XI", tipo:"ubs", bairro:"Cajazeiras", endereco:"R. Nossa Sra. do Bom Conselho, s/n", telefone:"(71) 3627-8710", distrito:"Cajazeiras", lat:-12.9028, lng:-38.3988 },
-  { id:55, nome:"USF Mata Escura", tipo:"ubs", bairro:"Mata Escura", endereco:"Av. Aliomar Baleeiro, s/n", telefone:"(71) 3457-6618", distrito:"Cabula/Beiru", lat:-12.9398, lng:-38.4318 },
-  { id:56, nome:"UBS Bonfim", tipo:"ubs", bairro:"Bonfim", endereco:"Largo do Bonfim, s/n", telefone:"(71) 3316-0440", distrito:"Itapagipe", lat:-12.9218, lng:-38.5058 },
-  { id:57, nome:"USF Massaranduba", tipo:"ubs", bairro:"Massaranduba", endereco:"R. da Massaranduba, s/n", telefone:"(71) 3316-8180", distrito:"Itapagipe", lat:-12.9158, lng:-38.5098 },
-  { id:58, nome:"UBS Itapagipe", tipo:"ubs", bairro:"Itapagipe", endereco:"R. Itapagipe, s/n", telefone:"(71) 3316-3340", distrito:"Itapagipe", lat:-12.9178, lng:-38.5148 },
+  { id:50, nome:"UBS Pernambués", tipo:"ubs", bairro:"Pernambués", endereco:"R. Thomaz Gonzaga, s/n", telefone:"(71) 3457-0510", distrito:"Cabula/Beiru", lat:-12.9662127, lng:-38.4647471 },
+  { id:51, nome:"USF Engenho Velho de Brotas", tipo:"ubs", bairro:"Candeal", endereco:"Rua 18 de Agosto, s/n", telefone:"(71) 3272-6218", distrito:"Barra/Rio Vermelho", lat:-12.995522, lng:-38.4812715 },
+  { id:52, nome:"UBS Pau da Lima", tipo:"ubs", bairro:"Pau da Lima", endereco:"R. Jayme Vieira Lima, s/n", telefone:"(71) 3627-1080", distrito:"Pau da Lima", lat:-12.9197876, lng:-38.4431272 },
+  { id:53, nome:"USF São Marcos", tipo:"ubs", bairro:"São Rafael", endereco:"Tv. Elba Veloso, 40", telefone:"(71) 3273-4220", distrito:"Cabula/Beiru", lat:-12.9240042, lng:-38.4324564 },
+  { id:54, nome:"UBS Cajazeiras XI", tipo:"ubs", bairro:"Cajazeiras XI", endereco:"R. Juscelino Kubitscheck, Qd D 18", telefone:"(71) 3627-8710", distrito:"Cajazeiras", lat:-12.8816993, lng:-38.4109732 },
+  { id:55, nome:"USF Mata Escura", tipo:"ubs", bairro:"Tancredo Neves", endereco:"Av. Cardeal Avelar Brandão Villela, s/n", telefone:"(71) 3457-6618", distrito:"Cabula/Beiru", lat:-12.9364634, lng:-38.4551280 },
+  { id:56, nome:"UBS Bonfim", tipo:"ubs", bairro:"Bonfim", endereco:"R. Duarte da Costa, s/n", telefone:"(71) 3316-0440", distrito:"Itapagipe", lat:-12.92879, lng:-38.5065231 },
+  { id:57, nome:"USF Massaranduba", tipo:"ubs", bairro:"Massaranduba", endereco:"R. Lopes Trovão, s/n", telefone:"(71) 3316-8180", distrito:"Itapagipe", lat:-12.9283955, lng:-38.4980985 },
+  { id:58, nome:"UBS Itapagipe", tipo:"ubs", bairro:"Caminho de Areia", endereco:"R. Henrique Dias, 249", telefone:"(71) 3316-3340", distrito:"Itapagipe", lat:-12.927944, lng:-38.505587 },
   { id:59, nome:"USF Calçada", tipo:"ubs", bairro:"Calçada", endereco:"R. Plínio Moscoso, s/n", telefone:"(71) 3316-2020", distrito:"Itapagipe", lat:-12.9228, lng:-38.5118 },
-  { id:60, nome:"UBS Pelourinho / Centro Histórico", tipo:"ubs", bairro:"Pelourinho", endereco:"R. das Laranjeiras, s/n", telefone:"(71) 3324-8100", distrito:"Centro Histórico", lat:-12.9728, lng:-38.5128 },
+  { id:60, nome:"UBS Pelourinho / Centro Histórico", tipo:"ubs", bairro:"Pelourinho", endereco:"R. do Bpo., 37", telefone:"(71) 3324-8100", distrito:"Centro Histórico", lat:-12.9745977, lng:-38.5095249 },
   { id:61, nome:"USF Barris", tipo:"ubs", bairro:"Barris", endereco:"R. do Barros, 255", telefone:"(71) 3329-6800", distrito:"Centro Histórico", lat:-12.9668, lng:-38.5138 },
   { id:62, nome:"UBS Campo Grande", tipo:"ubs", bairro:"Campo Grande", endereco:"Av. Sete de Setembro, 2119", telefone:"(71) 3329-7530", distrito:"Centro Histórico", lat:-12.9748, lng:-38.5200 },
   { id:63, nome:"USF Nazaré", tipo:"ubs", bairro:"Nazaré", endereco:"R. Carlos Gomes, s/n", telefone:"(71) 3324-3200", distrito:"Centro Histórico", lat:-12.9688, lng:-38.5168 },
-  { id:64, nome:"UBS Tancredo Neves", tipo:"ubs", bairro:"Tancredo Neves", endereco:"Av. Tancredo Neves, s/n", telefone:"(71) 3453-4000", distrito:"Cabula/Beiru", lat:-12.9638, lng:-38.4488 },
-  { id:65, nome:"USF Periperi", tipo:"ubs", bairro:"Periperi", endereco:"R. Soares, s/n", telefone:"(71) 3398-6600", distrito:"Subúrbio Ferroviário", lat:-12.8838, lng:-38.5168 },
-  { id:66, nome:"USF São Tomé de Paripe", tipo:"ubs", bairro:"São Tomé de Paripe", endereco:"R. de São Tomé, s/n", telefone:"(71) 3398-5600", distrito:"Subúrbio Ferroviário", lat:-12.8758, lng:-38.5380 },
-  { id:67, nome:"USF Valéria", tipo:"ubs", bairro:"Valéria", endereco:"Estrada de Valéria, 1050", telefone:"(71) 3627-6610", distrito:"Cabula/Beiru", lat:-12.8918, lng:-38.4200 },
-  { id:68, nome:"UBS Itapuã", tipo:"ubs", bairro:"Itapuã", endereco:"Estrada do Coco, s/n", telefone:"(71) 3217-6630", distrito:"Itapuã/Ipitanga", lat:-12.9548, lng:-38.3418 },
-  { id:69, nome:"USF Mussurunga", tipo:"ubs", bairro:"Mussurunga", endereco:"Av. Iguatemi, s/n", telefone:"(71) 3217-8910", distrito:"Itapuã/Ipitanga", lat:-12.9368, lng:-38.3608 },
-  { id:70, nome:"UBS Boca do Rio", tipo:"ubs", bairro:"Boca do Rio", endereco:"R. Jaime Sapolnik, 90", telefone:"(71) 3273-9920", distrito:"Itapuã/Ipitanga", lat:-12.9718, lng:-38.4178 },
-  { id:71, nome:"USF Patamares", tipo:"ubs", bairro:"Patamares", endereco:"R. do Patamares, s/n", telefone:"(71) 3365-4130", distrito:"Itapuã/Ipitanga", lat:-12.9628, lng:-38.3878 },
-  { id:72, nome:"USF Coutos", tipo:"ubs", bairro:"Coutos", endereco:"R. dos Coutos, s/n", telefone:"(71) 3398-6110", distrito:"Subúrbio Ferroviário", lat:-12.8748, lng:-38.5038 },
-  { id:73, nome:"UBS Liberdade", tipo:"ubs", bairro:"Liberdade", endereco:"R. Saldanha Marinho, s/n", telefone:"(71) 3117-1730", distrito:"Centro Histórico", lat:-12.9548, lng:-38.4978 },
-  { id:74, nome:"USF Garcia", tipo:"ubs", bairro:"Garcia", endereco:"Ladeira do Garcia, s/n", telefone:"(71) 3329-2420", distrito:"Barra/Rio Vermelho", lat:-12.9918, lng:-38.5068 },
-  { id:75, nome:"USF Engenho Velho da Federação", tipo:"ubs", bairro:"Federação", endereco:"R. Engenheiro Fuchs, s/n", telefone:"(71) 3334-3210", distrito:"Barra/Rio Vermelho", lat:-12.9998, lng:-38.5012 },
+  { id:64, nome:"UBS Tancredo Neves", tipo:"ubs", bairro:"Tancredo Neves", endereco:"R. Pernambuco, 72", telefone:"(71) 3453-4000", distrito:"Cabula/Beiru", lat:-12.9454848, lng:-38.4464486 },
+  { id:65, nome:"USF Periperi", tipo:"ubs", bairro:"Periperi", endereco:"R. Soares, s/n", telefone:"(71) 3398-6600", distrito:"Subúrbio Ferroviário", lat:-12.871276937637884, lng:-38.4617757185697 },
+  { id:66, nome:"USF São Tomé de Paripe", tipo:"ubs", bairro:"São Tomé de Paripe", endereco:"R. Santa Filomena, s/n", telefone:"(71) 3398-5600", distrito:"Subúrbio Ferroviário", lat:-12.8222174, lng:-38.4818273 },
+  { id:67, nome:"USF Valéria", tipo:"ubs", bairro:"Nova Brasília de Valéria", endereco:"R. Morada da Lagoa, s/n", telefone:"(71) 3627-6610", distrito:"Cabula/Beiru", lat:-12.8542041, lng:-38.4494937 },
+  { id:68, nome:"UBS Itapuã", tipo:"ubs", bairro:"Itapuã", endereco:"R. da Ilha, 195", telefone:"(71) 3217-6630", distrito:"Itapuã/Ipitanga", lat:-12.9459884, lng:-38.3691963 },
+  { id:69, nome:"USF Mussurunga", tipo:"ubs", bairro:"Mussurunga", endereco:"Setor E Caminho 16, s/n", telefone:"(71) 3217-8910", distrito:"Itapuã/Ipitanga", lat:-12.9161994, lng:-38.3676375 },
+  { id:70, nome:"UBS Boca do Rio", tipo:"ubs", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-9920", distrito:"Itapuã/Ipitanga", lat:-12.9735495, lng:-38.4320036 },
+  { id:71, nome:"USF Patamares", tipo:"ubs", bairro:"Pituaçu", endereco:"R. Gonçalves Cezimbra, 88", telefone:"(71) 3365-4130", distrito:"Itapuã/Ipitanga", lat:-12.9707268, lng:-38.4153899 },
+  { id:72, nome:"USF Coutos", tipo:"ubs", bairro:"Fazenda Coutos", endereco:"Trav. Dois de Julho, s/n", telefone:"(71) 3398-6110", distrito:"Subúrbio Ferroviário", lat:-12.8500081, lng:-38.4667514 },
+  { id:73, nome:"UBS Liberdade", tipo:"ubs", bairro:"Lapinha", endereco:"Estr. da Liberdade, 175", telefone:"(71) 3117-1730", distrito:"Centro Histórico", lat:-12.9537216, lng:-38.5001904 },
+  { id:74, nome:"USF Garcia", tipo:"ubs", bairro:"Garcia", endereco:"R. Quintino Bocaiuva, 8", telefone:"(71) 3329-2420", distrito:"Barra/Rio Vermelho", lat:-12.9905207, lng:-38.5084905 },
+  { id:75, nome:"USF Engenho Velho da Federação", tipo:"ubs", bairro:"Federação", endereco:"R. Sérgio de Carvalho, s/n", telefone:"(71) 3334-3210", distrito:"Barra/Rio Vermelho", lat:-12.9967397, lng:-38.5026054 },
   { id:76, nome:"UBS Águas Claras", tipo:"ubs", bairro:"Águas Claras", endereco:"Av. Luís Viana Filho, 7000", telefone:"(71) 3217-0640", distrito:"Itapuã/Ipitanga", lat:-12.9278, lng:-38.3578 },
 
   // ══ POLICLÍNICAS ══
-  { id:90, nome:"Policlínica Pirajá", tipo:"policlinica", bairro:"Pirajá", endereco:"R. Oito de Novembro, s/n", telefone:"(71) 3117-2560", distrito:"Cabula/Beiru", lat:-12.9310, lng:-38.4412 },
-  { id:91, nome:"Policlínica Boca do Rio", tipo:"policlinica", bairro:"Boca do Rio", endereco:"R. Jaime Sapolnik, s/n", telefone:"(71) 3273-4599", distrito:"Itapuã/Ipitanga", lat:-12.9730, lng:-38.4220 },
-  { id:92, nome:"Policlínica Brotas", tipo:"policlinica", bairro:"Brotas", endereco:"R. Lima e Silva, s/n", telefone:"(71) 3272-1800", distrito:"Barra/Rio Vermelho", lat:-12.9950, lng:-38.4868 },
-  { id:93, nome:"Policlínica Cajazeiras", tipo:"policlinica", bairro:"Cajazeiras", endereco:"Av. Boa Esperança, s/n", telefone:"(71) 3627-6520", distrito:"Cajazeiras", lat:-12.9098, lng:-38.4098 },
-  { id:94, nome:"Policlínica Pau da Lima", tipo:"policlinica", bairro:"Pau da Lima", endereco:"Rua Capanema, s/n", telefone:"(71) 3627-0990", distrito:"Pau da Lima", lat:-12.9240, lng:-38.4188 },
-  { id:95, nome:"Policlínica Itapuã", tipo:"policlinica", bairro:"Itapuã", endereco:"Av. Luís Viana Filho, s/n", telefone:"(71) 3217-3100", distrito:"Itapuã/Ipitanga", lat:-12.9538, lng:-38.3438 },
-  { id:96, nome:"Policlínica Subúrbio (Carlos Gomes)", tipo:"policlinica", bairro:"Subúrbio Ferroviário", endereco:"Av. Afrânio Peixoto, s/n", telefone:"(71) 3398-1540", distrito:"Subúrbio Ferroviário", lat:-12.8808, lng:-38.5248 },
-  { id:97, nome:"CEAC – Centro Especializ. de Atend. ao Cidadão", tipo:"policlinica", bairro:"Pelourinho", endereco:"R. Francisco Muniz Barreto, 7", telefone:"(71) 3116-4000", distrito:"Centro Histórico", lat:-12.9712, lng:-38.5122 },
+  { id:90, nome:"Policlínica Pirajá", tipo:"policlinica", bairro:"Pirajá", endereco:"R. Oito de Novembro, s/n", telefone:"(71) 3117-2560", distrito:"Cabula/Beiru", lat:-12.9022903, lng:-38.4590100 },
+  { id:91, nome:"Policlínica Boca do Rio", tipo:"policlinica", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-4599", distrito:"Itapuã/Ipitanga", lat:-12.9735495, lng:-38.4320036 },
+  { id:92, nome:"Policlínica Brotas", tipo:"policlinica", bairro:"Brotas", endereco:"Av. Dom João VI, 468", telefone:"(71) 3272-1800", distrito:"Barra/Rio Vermelho", lat:-12.9883602, lng:-38.4807829 },
+  { id:93, nome:"Policlínica Cajazeiras", tipo:"policlinica", bairro:"Cajazeiras", endereco:"Av. Boa Esperança, s/n", telefone:"(71) 3627-6520", distrito:"Cajazeiras", lat:-12.8997589, lng:-38.4103068 },
+  { id:94, nome:"Policlínica Pau da Lima", tipo:"policlinica", bairro:"São Marcos", endereco:"R. São Marcos, 50", telefone:"(71) 3627-0990", distrito:"Pau da Lima", lat:-12.9248424, lng:-38.4400171 },
+  { id:95, nome:"Policlínica Itapuã", tipo:"policlinica", bairro:"Itapuã", endereco:"Av. Dorival Caymmi, 14154", telefone:"(71) 3217-3100", distrito:"Itapuã/Ipitanga", lat:-12.9444628, lng:-38.3654484 },
+  { id:96, nome:"Policlínica Subúrbio (Carlos Gomes)", tipo:"policlinica", bairro:"Itacaranha", endereco:"Itacaranha, s/n", telefone:"(71) 3398-1540", distrito:"Subúrbio Ferroviário", lat:-12.883695, lng:-38.4826718 },
+  { id:97, nome:"CEAC – Centro Especializ. de Atend. ao Cidadão", tipo:"policlinica", bairro:"Pelourinho", endereco:"R. Francisco Muniz Barreto, 7", telefone:"(71) 3116-4000", distrito:"Centro Histórico", lat:-12.9741213, lng:-38.5119123 },
 
   // ══ MATERNIDADES ══
-  { id:110, nome:"Maternidade José Maria de Magalhães Netto (MJM)", tipo:"maternidade", bairro:"Brotas", endereco:"R. Teixeira de Barros, 72", telefone:"(71) 3116-4900", distrito:"Barra/Rio Vermelho", lat:-12.9912, lng:-38.4970 },
-  { id:111, nome:"Maternidade Climério de Oliveira", tipo:"maternidade", bairro:"Canela", endereco:"R. Carlos Gomes, 270", telefone:"(71) 3283-8400", distrito:"Barra/Rio Vermelho", lat:-13.0020, lng:-38.5098 },
+  { id:110, nome:"Maternidade José Maria de Magalhães Netto (MJM)", tipo:"maternidade", bairro:"Pau Miúdo", endereco:"R. Marquês de Maricá, s/n", telefone:"(71) 3116-4900", distrito:"Barra/Rio Vermelho", lat:-12.9592349, lng:-38.4846215 },
+  { id:111, nome:"Maternidade Climério de Oliveira", tipo:"maternidade", bairro:"Nazaré", endereco:"R. do Limoeiro, 137", telefone:"(71) 3283-9200", distrito:"Barra/Rio Vermelho", lat:-12.9721293, lng:-38.5013505 },
   { id:112, nome:"Maternidade Professor José Maria (Mat. Central)", tipo:"maternidade", bairro:"Engenho Velho", endereco:"R. Emílio Odebrecht, 38", telefone:"(71) 3113-5600", distrito:"Barra/Rio Vermelho", lat:-12.9898, lng:-38.4982 },
-  { id:113, nome:"Maternidade Municipal Dr. Nelson Pirajá", tipo:"maternidade", bairro:"Cajazeiras", endereco:"R. Cel. Azevedo, s/n", telefone:"(71) 3202-3600", distrito:"Cajazeiras", lat:-12.9080, lng:-38.4080 },
+  { id:113, nome:"Maternidade Municipal Dr. Nelson Pirajá", tipo:"maternidade", bairro:"Cajazeiras", endereco:"Estr. do Coqueiro Grande, s/n", telefone:"(71) 3202-3600", distrito:"Cajazeiras", lat:-12.903284, lng:-38.4056470 },
 ];
-
-// ─── COORDENADAS GEOJSON ──────────────────────────────────────────────────────
-// Edite as coordenadas aqui: formato [longitude, latitude]
-// Para atualizar um pin, localize pelo "id" e altere "coordinates": [lng, lat]
-const coordenadasGeoJSON = {
-  "type": "FeatureCollection",
-  "features": [
-    // ══ HOSPITAIS ══
-    { "type": "Feature", "properties": { "id": 1,   "nome": "Hospital Geral Roberto Santos (HGRS)"              }, "geometry": { "type": "Point", "coordinates": [-38.4500, -12.95517] } },
-    { "type": "Feature", "properties": { "id": 2,   "nome": "Hospital do Subúrbio"                              }, "geometry": { "type": "Point", "coordinates": [-38.5200, -12.8760] } },
-    { "type": "Feature", "properties": { "id": 3,   "nome": "Hospital Especializado Octávio Mangabeira (HEOM)" }, "geometry": { "type": "Point", "coordinates": [-38.5060, -12.9750] } },
-    { "type": "Feature", "properties": { "id": 4,   "nome": "Hospital Geral Ernesto Simões Filho (HGESF)"      }, "geometry": { "type": "Point", "coordinates": [-38.4840, -12.9430] } },
-    { "type": "Feature", "properties": { "id": 5,   "nome": "Hospital Municipal de Salvador (HMS)"             }, "geometry": { "type": "Point", "coordinates": [-38.4018, -12.9078] } },
-    { "type": "Feature", "properties": { "id": 6,   "nome": "Hospital da Mulher (HM)"                          }, "geometry": { "type": "Point", "coordinates": [-38.5048, -12.9316] } },
-    { "type": "Feature", "properties": { "id": 7,   "nome": "HUPES – Hospital Universitário Prof. Edgard Santos"}, "geometry": { "type": "Point", "coordinates": [-38.5105, -13.0028] } },
-    { "type": "Feature", "properties": { "id": 8,   "nome": "Hospital Couto Maia (HCMBA)"                      }, "geometry": { "type": "Point", "coordinates": [-38.5070, -12.9848] } },
-    { "type": "Feature", "properties": { "id": 9,   "nome": "Hospital Ana Nery"                                 }, "geometry": { "type": "Point", "coordinates": [-38.4900, -12.9440] } },
-    { "type": "Feature", "properties": { "id": 10,  "nome": "Hospital Geral do Estado (HGE)"                   }, "geometry": { "type": "Point", "coordinates": [-38.5036, -12.9882] } },
-    { "type": "Feature", "properties": { "id": 11,  "nome": "Hospital Manoel Victorino"                        }, "geometry": { "type": "Point", "coordinates": [-38.4832, -12.9258] } },
-    { "type": "Feature", "properties": { "id": 12,  "nome": "Hospital Santa Izabel"                            }, "geometry": { "type": "Point", "coordinates": [-38.5163, -12.9690] } },
-    { "type": "Feature", "properties": { "id": 13,  "nome": "Hospital São Rafael"                              }, "geometry": { "type": "Point", "coordinates": [-38.4380, -12.9503] } },
-    { "type": "Feature", "properties": { "id": 14,  "nome": "Hospital Espanhol"                                }, "geometry": { "type": "Point", "coordinates": [-38.5210, -13.0095] } },
-    { "type": "Feature", "properties": { "id": 15,  "nome": "Hospital Aliança"                                 }, "geometry": { "type": "Point", "coordinates": [-38.4925, -13.0063] } },
-    { "type": "Feature", "properties": { "id": 16,  "nome": "Hospital Português"                               }, "geometry": { "type": "Point", "coordinates": [-38.5118, -13.0010] } },
-    { "type": "Feature", "properties": { "id": 17,  "nome": "IPERBA – Instituto de Perinatologia da Bahia"     }, "geometry": { "type": "Point", "coordinates": [-38.4958, -12.9928] } },
-    { "type": "Feature", "properties": { "id": 18,  "nome": "Hospital Univers. Presidente Dutra (HUPD)"        }, "geometry": { "type": "Point", "coordinates": [-38.5030, -12.9985] } },
-
-    // ══ UPAs ══
-    { "type": "Feature", "properties": { "id": 20,  "nome": "UPA 24h – Cajazeiras"          }, "geometry": { "type": "Point", "coordinates": [-38.4070, -12.9090] } },
-    { "type": "Feature", "properties": { "id": 21,  "nome": "UPA 24h – Brotas"              }, "geometry": { "type": "Point", "coordinates": [-38.4878, -12.9938] } },
-    { "type": "Feature", "properties": { "id": 22,  "nome": "UPA 24h – Pirajá"              }, "geometry": { "type": "Point", "coordinates": [-38.4380, -12.9278] } },
-    { "type": "Feature", "properties": { "id": 23,  "nome": "UPA 24h – Plataforma"          }, "geometry": { "type": "Point", "coordinates": [-38.5218, -12.8916] } },
-    { "type": "Feature", "properties": { "id": 24,  "nome": "UPA 24h – Pau da Lima"         }, "geometry": { "type": "Point", "coordinates": [-38.4218, -12.9228] } },
-    { "type": "Feature", "properties": { "id": 25,  "nome": "UPA 24h – Itapuã"              }, "geometry": { "type": "Point", "coordinates": [-38.3458, -12.9543] } },
-    { "type": "Feature", "properties": { "id": 26,  "nome": "UPA 24h – Valéria"             }, "geometry": { "type": "Point", "coordinates": [-38.4240, -12.8853] } },
-    { "type": "Feature", "properties": { "id": 27,  "nome": "UPA 24h – Boca do Rio"         }, "geometry": { "type": "Point", "coordinates": [-38.4245, -12.9728] } },
-    { "type": "Feature", "properties": { "id": 28,  "nome": "UPA 24h – Escada (Subúrbio)"  }, "geometry": { "type": "Point", "coordinates": [-38.5386, -12.8638] } },
-
-    // ══ UBS / USF ══
-    { "type": "Feature", "properties": { "id": 40,  "nome": "UBS Barra"                          }, "geometry": { "type": "Point", "coordinates": [-38.5280, -13.0120] } },
-    { "type": "Feature", "properties": { "id": 41,  "nome": "UBS Rio Vermelho"                   }, "geometry": { "type": "Point", "coordinates": [-38.4988, -13.0042] } },
-    { "type": "Feature", "properties": { "id": 42,  "nome": "UBS Federação"                      }, "geometry": { "type": "Point", "coordinates": [-38.5022, -12.9975] } },
-    { "type": "Feature", "properties": { "id": 43,  "nome": "USF Nordeste de Amaralina"          }, "geometry": { "type": "Point", "coordinates": [-38.4768, -13.0108] } },
-    { "type": "Feature", "properties": { "id": 44,  "nome": "UBS Pituba"                         }, "geometry": { "type": "Point", "coordinates": [-38.4588, -12.9888] } },
-    { "type": "Feature", "properties": { "id": 45,  "nome": "UBS Itaigara"                       }, "geometry": { "type": "Point", "coordinates": [-38.4585, -12.9820] } },
-    { "type": "Feature", "properties": { "id": 46,  "nome": "UBS Sussuarana"                     }, "geometry": { "type": "Point", "coordinates": [-38.4278, -12.9478] } },
-    { "type": "Feature", "properties": { "id": 47,  "nome": "USF Cabula VI"                      }, "geometry": { "type": "Point", "coordinates": [-38.4400, -12.9558] } },
-    { "type": "Feature", "properties": { "id": 48,  "nome": "UBS Narandiba"                      }, "geometry": { "type": "Point", "coordinates": [-38.4490, -12.9658] } },
-    { "type": "Feature", "properties": { "id": 49,  "nome": "USF Saboeiro"                       }, "geometry": { "type": "Point", "coordinates": [-38.4558, -12.9618] } },
-    { "type": "Feature", "properties": { "id": 50,  "nome": "UBS Pernambués"                     }, "geometry": { "type": "Point", "coordinates": [-38.4470, -12.9498] } },
-    { "type": "Feature", "properties": { "id": 51,  "nome": "USF Engenho Velho de Brotas"        }, "geometry": { "type": "Point", "coordinates": [-38.4758, -12.9938] } },
-    { "type": "Feature", "properties": { "id": 52,  "nome": "UBS Pau da Lima"                    }, "geometry": { "type": "Point", "coordinates": [-38.4160, -12.9268] } },
-    { "type": "Feature", "properties": { "id": 53,  "nome": "USF São Marcos"                     }, "geometry": { "type": "Point", "coordinates": [-38.4320, -12.9468] } },
-    { "type": "Feature", "properties": { "id": 54,  "nome": "UBS Cajazeiras XI"                  }, "geometry": { "type": "Point", "coordinates": [-38.3988, -12.9028] } },
-    { "type": "Feature", "properties": { "id": 55,  "nome": "USF Mata Escura"                    }, "geometry": { "type": "Point", "coordinates": [-38.4318, -12.9398] } },
-    { "type": "Feature", "properties": { "id": 56,  "nome": "UBS Bonfim"                         }, "geometry": { "type": "Point", "coordinates": [-38.5058, -12.9218] } },
-    { "type": "Feature", "properties": { "id": 57,  "nome": "USF Massaranduba"                   }, "geometry": { "type": "Point", "coordinates": [-38.5098, -12.9158] } },
-    { "type": "Feature", "properties": { "id": 58,  "nome": "UBS Itapagipe"                      }, "geometry": { "type": "Point", "coordinates": [-38.5148, -12.9178] } },
-    { "type": "Feature", "properties": { "id": 59,  "nome": "USF Calçada"                        }, "geometry": { "type": "Point", "coordinates": [-38.5118, -12.9228] } },
-    { "type": "Feature", "properties": { "id": 60,  "nome": "UBS Pelourinho / Centro Histórico"  }, "geometry": { "type": "Point", "coordinates": [-38.5128, -12.9728] } },
-    { "type": "Feature", "properties": { "id": 61,  "nome": "USF Barris"                         }, "geometry": { "type": "Point", "coordinates": [-38.5138, -12.9668] } },
-    { "type": "Feature", "properties": { "id": 62,  "nome": "UBS Campo Grande"                   }, "geometry": { "type": "Point", "coordinates": [-38.5200, -12.9748] } },
-    { "type": "Feature", "properties": { "id": 63,  "nome": "USF Nazaré"                         }, "geometry": { "type": "Point", "coordinates": [-38.5168, -12.9688] } },
-    { "type": "Feature", "properties": { "id": 64,  "nome": "UBS Tancredo Neves"                 }, "geometry": { "type": "Point", "coordinates": [-38.4488, -12.9638] } },
-    { "type": "Feature", "properties": { "id": 65,  "nome": "USF Periperi"                       }, "geometry": { "type": "Point", "coordinates": [-38.5168, -12.8838] } },
-    { "type": "Feature", "properties": { "id": 66,  "nome": "USF São Tomé de Paripe"             }, "geometry": { "type": "Point", "coordinates": [-38.5380, -12.8758] } },
-    { "type": "Feature", "properties": { "id": 67,  "nome": "USF Valéria"                        }, "geometry": { "type": "Point", "coordinates": [-38.4200, -12.8918] } },
-    { "type": "Feature", "properties": { "id": 68,  "nome": "UBS Itapuã"                         }, "geometry": { "type": "Point", "coordinates": [-38.3418, -12.9548] } },
-    { "type": "Feature", "properties": { "id": 69,  "nome": "USF Mussurunga"                     }, "geometry": { "type": "Point", "coordinates": [-38.3608, -12.9368] } },
-    { "type": "Feature", "properties": { "id": 70,  "nome": "UBS Boca do Rio"                    }, "geometry": { "type": "Point", "coordinates": [-38.4178, -12.9718] } },
-    { "type": "Feature", "properties": { "id": 71,  "nome": "USF Patamares"                      }, "geometry": { "type": "Point", "coordinates": [-38.3878, -12.9628] } },
-    { "type": "Feature", "properties": { "id": 72,  "nome": "USF Coutos"                         }, "geometry": { "type": "Point", "coordinates": [-38.5038, -12.8748] } },
-    { "type": "Feature", "properties": { "id": 73,  "nome": "UBS Liberdade"                      }, "geometry": { "type": "Point", "coordinates": [-38.4978, -12.9548] } },
-    { "type": "Feature", "properties": { "id": 74,  "nome": "USF Garcia"                         }, "geometry": { "type": "Point", "coordinates": [-38.5068, -12.9918] } },
-    { "type": "Feature", "properties": { "id": 75,  "nome": "USF Engenho Velho da Federação"     }, "geometry": { "type": "Point", "coordinates": [-38.5012, -12.9998] } },
-    { "type": "Feature", "properties": { "id": 76,  "nome": "UBS Águas Claras"                   }, "geometry": { "type": "Point", "coordinates": [-38.3578, -12.9278] } },
-
-    // ══ POLICLÍNICAS ══
-    { "type": "Feature", "properties": { "id": 90,  "nome": "Policlínica Pirajá"                              }, "geometry": { "type": "Point", "coordinates": [-38.4412, -12.9310] } },
-    { "type": "Feature", "properties": { "id": 91,  "nome": "Policlínica Boca do Rio"                         }, "geometry": { "type": "Point", "coordinates": [-38.4220, -12.9730] } },
-    { "type": "Feature", "properties": { "id": 92,  "nome": "Policlínica Brotas"                              }, "geometry": { "type": "Point", "coordinates": [-38.4868, -12.9950] } },
-    { "type": "Feature", "properties": { "id": 93,  "nome": "Policlínica Cajazeiras"                          }, "geometry": { "type": "Point", "coordinates": [-38.4098, -12.9098] } },
-    { "type": "Feature", "properties": { "id": 94,  "nome": "Policlínica Pau da Lima"                         }, "geometry": { "type": "Point", "coordinates": [-38.4188, -12.9240] } },
-    { "type": "Feature", "properties": { "id": 95,  "nome": "Policlínica Itapuã"                              }, "geometry": { "type": "Point", "coordinates": [-38.3438, -12.9538] } },
-    { "type": "Feature", "properties": { "id": 96,  "nome": "Policlínica Subúrbio (Carlos Gomes)"             }, "geometry": { "type": "Point", "coordinates": [-38.5248, -12.8808] } },
-    { "type": "Feature", "properties": { "id": 97,  "nome": "CEAC – Centro Especializ. de Atend. ao Cidadão"  }, "geometry": { "type": "Point", "coordinates": [-38.5122, -12.9712] } },
-
-    // ══ MATERNIDADES ══
-    { "type": "Feature", "properties": { "id": 110, "nome": "Maternidade José Maria de Magalhães Netto (MJM)"      }, "geometry": { "type": "Point", "coordinates": [-38.4970, -12.9912] } },
-    { "type": "Feature", "properties": { "id": 111, "nome": "Maternidade Climério de Oliveira"                      }, "geometry": { "type": "Point", "coordinates": [-38.5098, -13.0020] } },
-    { "type": "Feature", "properties": { "id": 112, "nome": "Maternidade Professor José Maria (Mat. Central)"       }, "geometry": { "type": "Point", "coordinates": [-38.4982, -12.9898] } },
-    { "type": "Feature", "properties": { "id": 113, "nome": "Maternidade Municipal Dr. Nelson Pirajá"               }, "geometry": { "type": "Point", "coordinates": [-38.4080, -12.9080] } }
-  ]
-};
-
-// Aplica as coordenadas do GeoJSON sobre os dados internos (match por id)
-coordenadasGeoJSON.features.forEach(feature => {
-  const { id } = feature.properties;
-  const [lng, lat] = feature.geometry.coordinates;
-  const u = unidades.find(u => u.id === id);
-  if (u) { u.lat = lat; u.lng = lng; }
-});
-
 // ─── CONFIGURAÇÃO DO MAPA ─────────────────────────────────────────────────────
 const typeConfig = {
   hospital:    { color: '#ff6b6b', emoji: '🏥', label: 'Hospital' },
@@ -294,7 +171,7 @@ document.getElementById('countPoli').textContent = (counts.policlinica||0) + (co
 // ─── LEAFLET MAP ──────────────────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true }).setView([-12.9716, -38.5016], 12);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   attribution: '&copy; OpenStreetMap &copy; CARTO',
   subdomains: 'abcd',
   maxZoom: 19
