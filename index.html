@@ -8,7 +8,170 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="mapa-saude-salvador.css">
+<style>
+:root {
+  --hospital: #ff6b6b;
+  --upa: #ffa94d;
+  --ubs: #4dabf7;
+  --policlinica: #9b72ff;
+  --maternidade: #f783ac;
+  --caps: #63e6be;
+  --especializado: #74c0fc;
+  --instituto: #a9e34b;
+  --laboratorio: #ffd43b;
+  --farmacia: #69db7c;
+  --outros: #adb5bd;
+
+  --bg: #0f1117;
+  --surface: #181c27;
+  --surface2: #1e2232;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8ecf4;
+  --muted: #7a829a;
+  --accent: #4dabf7;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+
+/* ── HEADER ── */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 18px;
+  padding: 0 20px; height: 60px;
+}
+.header-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.brand-icon { font-size: 22px; }
+.brand-text h1 { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); line-height: 1; }
+.brand-text span { font-size: 11px; color: var(--muted); }
+
+.search-wrap {
+  flex: 1; max-width: 360px;
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 0 14px; height: 36px;
+}
+.search-icon { font-size: 14px; opacity: .5; }
+.search-wrap input {
+  background: none; border: none; outline: none;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text);
+  width: 100%;
+}
+.search-wrap input::placeholder { color: var(--muted); }
+
+.stats { display: flex; gap: 8px; margin-left: auto; }
+.stat-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+  white-space: nowrap;
+}
+.stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── LAYOUT ── */
+.main { display: flex; height: 100vh; padding-top: 60px; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 320px; flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.filters { padding: 14px 16px; border-bottom: 1px solid var(--border); }
+.filters-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+.filter-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--muted);
+  cursor: pointer; transition: all .15s;
+}
+.filter-btn .dot { width: 7px; height: 7px; border-radius: 50%; }
+.filter-btn.active { color: var(--text); border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.06); }
+.filter-btn:hover { border-color: rgba(255,255,255,0.2); }
+
+.list-header { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+.list-count { font-size: 12px; color: var(--muted); }
+.list-count span { color: var(--accent); font-weight: 600; }
+
+.units-list { flex: 1; overflow-y: auto; padding: 8px 10px; }
+.units-list::-webkit-scrollbar { width: 4px; }
+.units-list::-webkit-scrollbar-track { background: transparent; }
+.units-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+.unit-card {
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 6px;
+  background: var(--surface2); border: 1px solid var(--border);
+  cursor: pointer; transition: all .15s;
+}
+.unit-card:hover { border-color: rgba(255,255,255,0.15); transform: translateX(2px); }
+.unit-card.active { border-color: var(--accent); background: rgba(77,171,247,0.08); }
+
+.card-top { display: flex; gap: 10px; align-items: flex-start; }
+.card-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.card-info { flex: 1; min-width: 0; }
+.card-type-badge { display: inline-block; font-size: 10px; font-weight: 600; border-radius: 4px; padding: 1px 6px; margin-bottom: 3px; }
+.card-name { font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--text); }
+.card-address { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.no-results { text-align: center; padding: 40px 20px; color: var(--muted); }
+.no-results .big { font-size: 40px; margin-bottom: 8px; }
+
+/* ── MAP ── */
+#map { flex: 1; z-index: 1; }
+
+/* ── PANEL ── */
+.popup-overlay {
+  position: fixed; bottom: -100%; right: 20px;
+  width: 320px; background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px 16px 0 0;
+  padding: 20px 20px 24px;
+  z-index: 2000; transition: bottom .3s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.5);
+}
+.popup-overlay.visible { bottom: 0; }
+.popup-close {
+  position: absolute; top: 14px; right: 14px;
+  background: rgba(255,255,255,0.08); border: none;
+  color: var(--muted); width: 28px; height: 28px; border-radius: 50%;
+  cursor: pointer; font-size: 13px; display: flex; align-items: center; justify-content: center;
+}
+.popup-type { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+.popup-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 14px; line-height: 1.3; }
+.popup-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 7px; }
+.popup-row .ico { flex-shrink: 0; font-size: 14px; }
+.popup-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.btn-maps {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 8px;
+  background: linear-gradient(135deg, #4dabf7, #339af0);
+  color: #fff; font-size: 13px; font-weight: 600;
+  text-decoration: none; transition: opacity .15s;
+}
+.btn-maps:hover { opacity: .85; }
+.btn-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 8px;
+  background: linear-gradient(135deg, #69db7c, #40c057);
+  color: #fff; font-size: 13px; font-weight: 600;
+  text-decoration: none; transition: opacity .15s;
+}
+.btn-link:hover { opacity: .85; }
+
+/* Leaflet popup */
+.l-popup-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 3px; }
+.l-popup-name { font-weight: 700; font-size: 14px; color: #111; margin-bottom: 4px; }
+.l-popup-addr { font-size: 12px; color: #555; }
+.leaflet-popup-content-wrapper { border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.2); }
+.leaflet-popup-content { margin: 12px 14px; }
+</style>
 </head>
 <body>
 
@@ -39,20 +202,32 @@
     <div class="filters">
       <div class="filters-title">Filtrar por tipo</div>
       <div class="filter-btns">
-        <button class="filter-btn active hospital" data-type="hospital" onclick="toggleFilter(this)">
+        <button class="filter-btn active" data-type="hospital" onclick="toggleFilter(this)">
           <span class="dot" style="background:var(--hospital)"></span> Hospital
         </button>
-        <button class="filter-btn active upa" data-type="upa" onclick="toggleFilter(this)">
+        <button class="filter-btn active" data-type="upa" onclick="toggleFilter(this)">
           <span class="dot" style="background:var(--upa)"></span> UPA 24h
         </button>
-        <button class="filter-btn active ubs" data-type="ubs" onclick="toggleFilter(this)">
+        <button class="filter-btn active" data-type="ubs" onclick="toggleFilter(this)">
           <span class="dot" style="background:var(--ubs)"></span> UBS / USF
         </button>
-        <button class="filter-btn active policlinica" data-type="policlinica" onclick="toggleFilter(this)">
+        <button class="filter-btn active" data-type="policlinica" onclick="toggleFilter(this)">
           <span class="dot" style="background:var(--policlinica)"></span> Policlínica
         </button>
-        <button class="filter-btn active maternidade" data-type="maternidade" onclick="toggleFilter(this)">
+        <button class="filter-btn active" data-type="maternidade" onclick="toggleFilter(this)">
           <span class="dot" style="background:var(--maternidade)"></span> Maternidade
+        </button>
+        <button class="filter-btn active" data-type="caps" onclick="toggleFilter(this)">
+          <span class="dot" style="background:var(--caps)"></span> CAPS
+        </button>
+        <button class="filter-btn active" data-type="hospital_especializado" onclick="toggleFilter(this)">
+          <span class="dot" style="background:var(--especializado)"></span> Hosp. Esp.
+        </button>
+        <button class="filter-btn active" data-type="instituto" onclick="toggleFilter(this)">
+          <span class="dot" style="background:var(--instituto)"></span> Instituto
+        </button>
+        <button class="filter-btn active" data-type="outros" onclick="toggleFilter(this)">
+          <span class="dot" style="background:var(--outros)"></span> Outros
         </button>
       </div>
     </div>
@@ -76,161 +251,208 @@
   <div class="popup-row"><span class="ico">🏘️</span><span id="pBairro"></span></div>
   <div class="popup-row" id="pPhoneRow"><span class="ico">📞</span><span id="pPhone"></span></div>
   <div class="popup-row" id="pDistritoRow"><span class="ico">🗺️</span><span id="pDistrito"></span></div>
+  <div class="popup-row" id="pLinkRow" style="display:none">
+    <span class="ico">🔗</span>
+    <span id="pLinkLabel" style="font-size:13px; color: var(--muted);">Link externo</span>
+  </div>
   <div class="popup-actions">
     <a class="btn-maps" id="pMapsLink" target="_blank">🗺️ Ver no Maps</a>
+    <a class="btn-link" id="pExternalLink" target="_blank" style="display:none">🔗 Acessar Link</a>
     <a class="btn-maps" id="pFichaLink" target="_blank" style="display:none; background:linear-gradient(135deg,#9b72ff,#7c4dff);">📋 Ver Ficha</a>
   </div>
 </div>
 
 <script>
-// ─── DADOS: Unidades de Saúde de Salvador ─────────────────────────────────────
-const unidades = [
-// ══ UPAs ══ (coordenadas verificadas e corrigidas via Google Maps)
-  { id:20, nome:"UPA 24h – Cajazeiras", tipo:"upa", bairro:"Cajazeiras VIII", endereco:"R. Dep. Herculano Menezes, 81", telefone:"(71) 3627-8686", distrito:"Cajazeiras", lat:-12.8994319, lng:-38.4125670 },
-  { id:21, nome:"UPA 24h – Brotas", tipo:"upa", bairro:"Campinas de Brotas", endereco:"R. Jardim Madalena, s/n", telefone:"(71) 3272-0880", distrito:"Barra/Rio Vermelho", lat:-12.9864154, lng:-38.4801717 },
-  { id:22, nome:"UPA 24h – Pirajá", tipo:"upa", bairro:"Jardim Santo Inácio", endereco:"R. Direta de Santo Inácio, s/n", telefone:"(71) 3117-2544", distrito:"Cabula/Beiru", lat:-12.9265608, lng:-38.4609509 },
-  { id:23, nome:"UPA 24h – Plataforma", tipo:"upa", bairro:"Plataforma", endereco:"R. Antônio Balbino, s/n", telefone:"(71) 3398-3035", distrito:"Subúrbio Ferroviário", lat:-12.8943089, lng:-38.4872304 },
-  { id:24, nome:"UPA 24h – Pau da Lima", tipo:"upa", bairro:"Santa Mônica", endereco:"R. do Forno, s/n", telefone:"(71) 3627-8700", distrito:"Pau da Lima", lat:-12.9469689, lng:-38.4810893 },
-  { id:25, nome:"UPA 24h – Itapuã", tipo:"upa", bairro:"Itapuã", endereco:"R. da Cacimba, S/N", telefone:"(71) 3217-8650", distrito:"Itapuã/Ipitanga", lat:-12.9489895, lng:-38.3663472 },
-  { id:26, nome:"UPA 24h – Valéria", tipo:"upa", bairro:"Valéria", endereco:"R. do Lavrador, s/n", telefone:"(71) 3627-9000", distrito:"Cabula/Beiru", lat:-12.8646079, lng:-38.4372461 },
-  { id:27, nome:"UPA 24h – Boca do Rio", tipo:"upa", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-4699", distrito:"Itapuã/Ipitanga", lat:-12.9732882, lng:-38.4320575 },
-  { id:28, nome:"UPA 24h – Escada (Subúrbio)", tipo:"upa", bairro:"Itacaranha", endereco:"Itacaranha, s/n", telefone:"(71) 3116-2900", distrito:"Subúrbio Ferroviário", lat:-12.8822440, lng:-38.4813986 },
-
-  // ══ UBS / USF ══
-  { id:40, nome:"UBS Barra", tipo:"ubs", bairro:"Barra", endereco:"Av. Sete de Setembro, 3800", telefone:"(71) 3264-7400", distrito:"Barra/Rio Vermelho", lat:-13.0042571, lng:-38.5330617 },
-  { id:41, nome:"UBS Rio Vermelho", tipo:"ubs", bairro:"Rio Vermelho", endereco:"Av. Oceânica, 4015", telefone:"(71) 3334-2186", distrito:"Barra/Rio Vermelho", lat:-13.010169, lng:-38.4968854 },
-  { id:42, nome:"UBS Federação", tipo:"ubs", bairro:"Federação", endereco:"Av. Cardeal da Silva, s/n", telefone:"(71) 3283-2000", distrito:"Barra/Rio Vermelho", lat:-13.0019021, lng:-38.5016134 },
-  { id:43, nome:"USF Nordeste de Amaralina", tipo:"ubs", bairro:"Nordeste de Amaralina", endereco:"R. Mucugê, s/n", telefone:"(71) 3334-4510", distrito:"Barra/Rio Vermelho", lat:-13.0108, lng:-38.4768 },
-  { id:44, nome:"UBS Pituba", tipo:"ubs", bairro:"Pituba", endereco:"R. Des. Paulo Gaudenzi, s/n", telefone:"(71) 3453-5500", distrito:"Barra/Rio Vermelho", lat:-12.9888, lng:-38.4588 },
-  { id:45, nome:"UBS Itaigara", tipo:"ubs", bairro:"Itaigara", endereco:"R. Visc. do Rio Branco, 50", telefone:"(71) 3453-1200", distrito:"Barra/Rio Vermelho", lat:-12.9820, lng:-38.4585 },
-  { id:46, nome:"UBS Sussuarana", tipo:"ubs", bairro:"Novo Horizonte", endereco:"Av. Ulysses Guimarães, 4072", telefone:"(71) 3596-8380", distrito:"Cabula/Beiru", lat:-12.9331418, lng:-38.4452976 },
-  { id:47, nome:"USF Cabula VI", tipo:"ubs", bairro:"Cabula VI", endereco:"Estr. da Cachoeirinha, s/n", telefone:"(71) 3273-1520", distrito:"Cabula/Beiru", lat:-12.9541722, lng:-38.4378603 },
-  { id:48, nome:"UBS Narandiba", tipo:"ubs", bairro:"Narandiba", endereco:"Av. Edgard Santos, s/n", telefone:"(71) 3596-7990", distrito:"Cabula/Beiru", lat:-12.9563286, lng:-38.4435515 },
-  { id:49, nome:"USF Saboeiro", tipo:"ubs", bairro:"Saboeiro", endereco:"R. Direta do Saboeiro, s/n", telefone:"(71) 3593-0110", distrito:"Cabula/Beiru", lat:-12.9618, lng:-38.4558 },
-  { id:50, nome:"UBS Pernambués", tipo:"ubs", bairro:"Pernambués", endereco:"R. Thomaz Gonzaga, s/n", telefone:"(71) 3457-0510", distrito:"Cabula/Beiru", lat:-12.9662127, lng:-38.4647471 },
-  { id:51, nome:"USF Engenho Velho de Brotas", tipo:"ubs", bairro:"Candeal", endereco:"Rua 18 de Agosto, s/n", telefone:"(71) 3272-6218", distrito:"Barra/Rio Vermelho", lat:-12.995522, lng:-38.4812715 },
-  { id:52, nome:"UBS Pau da Lima", tipo:"ubs", bairro:"Pau da Lima", endereco:"R. Jayme Vieira Lima, s/n", telefone:"(71) 3627-1080", distrito:"Pau da Lima", lat:-12.9197876, lng:-38.4431272 },
-  { id:53, nome:"USF São Marcos", tipo:"ubs", bairro:"São Rafael", endereco:"Tv. Elba Veloso, 40", telefone:"(71) 3273-4220", distrito:"Cabula/Beiru", lat:-12.9240042, lng:-38.4324564 },
-  { id:54, nome:"UBS Cajazeiras XI", tipo:"ubs", bairro:"Cajazeiras XI", endereco:"R. Juscelino Kubitscheck, Qd D 18", telefone:"(71) 3627-8710", distrito:"Cajazeiras", lat:-12.8816993, lng:-38.4109732 },
-  { id:55, nome:"USF Mata Escura", tipo:"ubs", bairro:"Tancredo Neves", endereco:"Av. Cardeal Avelar Brandão Villela, s/n", telefone:"(71) 3457-6618", distrito:"Cabula/Beiru", lat:-12.9364634, lng:-38.4551280 },
-  { id:56, nome:"UBS Bonfim", tipo:"ubs", bairro:"Bonfim", endereco:"R. Duarte da Costa, s/n", telefone:"(71) 3316-0440", distrito:"Itapagipe", lat:-12.92879, lng:-38.5065231 },
-  { id:57, nome:"USF Massaranduba", tipo:"ubs", bairro:"Massaranduba", endereco:"R. Lopes Trovão, s/n", telefone:"(71) 3316-8180", distrito:"Itapagipe", lat:-12.9283955, lng:-38.4980985 },
-  { id:58, nome:"UBS Itapagipe", tipo:"ubs", bairro:"Caminho de Areia", endereco:"R. Henrique Dias, 249", telefone:"(71) 3316-3340", distrito:"Itapagipe", lat:-12.927944, lng:-38.505587 },
-  { id:59, nome:"USF Calçada", tipo:"ubs", bairro:"Calçada", endereco:"R. Plínio Moscoso, s/n", telefone:"(71) 3316-2020", distrito:"Itapagipe", lat:-12.9228, lng:-38.5118 },
-  { id:60, nome:"UBS Pelourinho / Centro Histórico", tipo:"ubs", bairro:"Pelourinho", endereco:"R. do Bpo., 37", telefone:"(71) 3324-8100", distrito:"Centro Histórico", lat:-12.9745977, lng:-38.5095249 },
-  { id:61, nome:"USF Barris", tipo:"ubs", bairro:"Barris", endereco:"R. do Barros, 255", telefone:"(71) 3329-6800", distrito:"Centro Histórico", lat:-12.9668, lng:-38.5138 },
-  { id:62, nome:"UBS Campo Grande", tipo:"ubs", bairro:"Campo Grande", endereco:"Av. Sete de Setembro, 2119", telefone:"(71) 3329-7530", distrito:"Centro Histórico", lat:-12.9748, lng:-38.5200 },
-  { id:63, nome:"USF Nazaré", tipo:"ubs", bairro:"Nazaré", endereco:"R. Carlos Gomes, s/n", telefone:"(71) 3324-3200", distrito:"Centro Histórico", lat:-12.9688, lng:-38.5168 },
-  { id:64, nome:"UBS Tancredo Neves", tipo:"ubs", bairro:"Tancredo Neves", endereco:"R. Pernambuco, 72", telefone:"(71) 3453-4000", distrito:"Cabula/Beiru", lat:-12.9454848, lng:-38.4464486 },
-  { id:65, nome:"USF Periperi", tipo:"ubs", bairro:"Periperi", endereco:"R. Soares, s/n", telefone:"(71) 3398-6600", distrito:"Subúrbio Ferroviário", lat:-12.871276937637884, lng:-38.4617757185697 },
-  { id:66, nome:"USF São Tomé de Paripe", tipo:"ubs", bairro:"São Tomé de Paripe", endereco:"R. Santa Filomena, s/n", telefone:"(71) 3398-5600", distrito:"Subúrbio Ferroviário", lat:-12.8222174, lng:-38.4818273 },
-  { id:67, nome:"USF Valéria", tipo:"ubs", bairro:"Nova Brasília de Valéria", endereco:"R. Morada da Lagoa, s/n", telefone:"(71) 3627-6610", distrito:"Cabula/Beiru", lat:-12.8542041, lng:-38.4494937 },
-  { id:68, nome:"UBS Itapuã", tipo:"ubs", bairro:"Itapuã", endereco:"R. da Ilha, 195", telefone:"(71) 3217-6630", distrito:"Itapuã/Ipitanga", lat:-12.9459884, lng:-38.3691963 },
-  { id:69, nome:"USF Mussurunga", tipo:"ubs", bairro:"Mussurunga", endereco:"Setor E Caminho 16, s/n", telefone:"(71) 3217-8910", distrito:"Itapuã/Ipitanga", lat:-12.9161994, lng:-38.3676375 },
-  { id:70, nome:"UBS Boca do Rio", tipo:"ubs", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-9920", distrito:"Itapuã/Ipitanga", lat:-12.9735495, lng:-38.4320036 },
-  { id:71, nome:"USF Patamares", tipo:"ubs", bairro:"Pituaçu", endereco:"R. Gonçalves Cezimbra, 88", telefone:"(71) 3365-4130", distrito:"Itapuã/Ipitanga", lat:-12.9707268, lng:-38.4153899 },
-  { id:72, nome:"USF Coutos", tipo:"ubs", bairro:"Fazenda Coutos", endereco:"Trav. Dois de Julho, s/n", telefone:"(71) 3398-6110", distrito:"Subúrbio Ferroviário", lat:-12.8500081, lng:-38.4667514 },
-  { id:73, nome:"UBS Liberdade", tipo:"ubs", bairro:"Lapinha", endereco:"Estr. da Liberdade, 175", telefone:"(71) 3117-1730", distrito:"Centro Histórico", lat:-12.9537216, lng:-38.5001904 },
-  { id:74, nome:"USF Garcia", tipo:"ubs", bairro:"Garcia", endereco:"R. Quintino Bocaiuva, 8", telefone:"(71) 3329-2420", distrito:"Barra/Rio Vermelho", lat:-12.9905207, lng:-38.5084905 },
-  { id:75, nome:"USF Engenho Velho da Federação", tipo:"ubs", bairro:"Federação", endereco:"R. Sérgio de Carvalho, s/n", telefone:"(71) 3334-3210", distrito:"Barra/Rio Vermelho", lat:-12.9967397, lng:-38.5026054 },
-  { id:76, nome:"UBS Águas Claras", tipo:"ubs", bairro:"Águas Claras", endereco:"Av. Luís Viana Filho, 7000", telefone:"(71) 3217-0640", distrito:"Itapuã/Ipitanga", lat:-12.9278, lng:-38.3578 },
-
-  // ══ POLICLÍNICAS ══
-  { id:90, nome:"Policlínica Pirajá", tipo:"policlinica", bairro:"Pirajá", endereco:"R. Oito de Novembro, s/n", telefone:"(71) 3117-2560", distrito:"Cabula/Beiru", lat:-12.9022903, lng:-38.4590100 },
-  { id:91, nome:"Policlínica Boca do Rio", tipo:"policlinica", bairro:"Imbuí", endereco:"Rua Jayme Sapolnik, s/n", telefone:"(71) 3273-4599", distrito:"Itapuã/Ipitanga", lat:-12.9735495, lng:-38.4320036 },
-  { id:92, nome:"Policlínica Brotas", tipo:"policlinica", bairro:"Brotas", endereco:"Av. Dom João VI, 468", telefone:"(71) 3272-1800", distrito:"Barra/Rio Vermelho", lat:-12.9883602, lng:-38.4807829 },
-  { id:93, nome:"Policlínica Cajazeiras", tipo:"policlinica", bairro:"Cajazeiras", endereco:"Av. Boa Esperança, s/n", telefone:"(71) 3627-6520", distrito:"Cajazeiras", lat:-12.8997589, lng:-38.4103068 },
-  { id:94, nome:"Policlínica Pau da Lima", tipo:"policlinica", bairro:"São Marcos", endereco:"R. São Marcos, 50", telefone:"(71) 3627-0990", distrito:"Pau da Lima", lat:-12.9248424, lng:-38.4400171 },
-  { id:95, nome:"Policlínica Itapuã", tipo:"policlinica", bairro:"Itapuã", endereco:"Av. Dorival Caymmi, 14154", telefone:"(71) 3217-3100", distrito:"Itapuã/Ipitanga", lat:-12.9444628, lng:-38.3654484 },
-  { id:96, nome:"Policlínica Subúrbio (Carlos Gomes)", tipo:"policlinica", bairro:"Itacaranha", endereco:"Itacaranha, s/n", telefone:"(71) 3398-1540", distrito:"Subúrbio Ferroviário", lat:-12.883695, lng:-38.4826718 },
-  { id:97, nome:"CEAC – Centro Especializ. de Atend. ao Cidadão", tipo:"policlinica", bairro:"Pelourinho", endereco:"R. Francisco Muniz Barreto, 7", telefone:"(71) 3116-4000", distrito:"Centro Histórico", lat:-12.9741213, lng:-38.5119123 },
-
-  // ══ MATERNIDADES ══
-  { id:110, nome:"Maternidade José Maria de Magalhães Netto (MJM)", tipo:"maternidade", bairro:"Pau Miúdo", endereco:"R. Marquês de Maricá, s/n", telefone:"(71) 3116-4900", distrito:"Barra/Rio Vermelho", lat:-12.9592349, lng:-38.4846215 },
-  { id:111, nome:"Maternidade Climério de Oliveira", tipo:"maternidade", bairro:"Nazaré", endereco:"R. do Limoeiro, 137", telefone:"(71) 3283-9200", distrito:"Barra/Rio Vermelho", lat:-12.9721293, lng:-38.5013505 },
-  { id:112, nome:"Maternidade Professor José Maria (Mat. Central)", tipo:"maternidade", bairro:"Engenho Velho", endereco:"R. Emílio Odebrecht, 38", telefone:"(71) 3113-5600", distrito:"Barra/Rio Vermelho", lat:-12.9898, lng:-38.4982 },
-  { id:113, nome:"Maternidade Municipal Dr. Nelson Pirajá", tipo:"maternidade", bairro:"Cajazeiras", endereco:"Estr. do Coqueiro Grande, s/n", telefone:"(71) 3202-3600", distrito:"Cajazeiras", lat:-12.903284, lng:-38.4056470 },
-];
-// ─── CONFIGURAÇÃO DO MAPA ─────────────────────────────────────────────────────
+// ─── TIPO CONFIG ──────────────────────────────────────────────────────────────
+// Cobre TODOS os tipos usados nos dados para garantir que todos os pontos apareçam
 const typeConfig = {
-  hospital:    { color: '#ff6b6b', emoji: '🏥', label: 'Hospital' },
-  upa:         { color: '#ffa94d', emoji: '🚑', label: 'UPA 24h' },
-  ubs:         { color: '#4dabf7', emoji: '⚕️', label: 'UBS / USF' },
-  policlinica: { color: '#9b72ff', emoji: '🔬', label: 'Policlínica' },
-  maternidade: { color: '#f783ac', emoji: '👶', label: 'Maternidade' },
+  hospital:               { color: '#ff6b6b', emoji: '🏥', label: 'Hospital',            group: 'hospital' },
+  hospital_especializado: { color: '#74c0fc', emoji: '🏨', label: 'Hosp. Especializado',  group: 'hospital_especializado' },
+  hospital_psiquiatrico:  { color: '#74c0fc', emoji: '🧠', label: 'Hosp. Psiquiátrico',   group: 'hospital_especializado' },
+  upa:                    { color: '#ffa94d', emoji: '🚑', label: 'UPA 24h',              group: 'upa' },
+  ubs:                    { color: '#4dabf7', emoji: '⚕️', label: 'UBS / USF',            group: 'ubs' },
+  policlinica:            { color: '#9b72ff', emoji: '🔬', label: 'Policlínica',           group: 'policlinica' },
+  maternidade:            { color: '#f783ac', emoji: '👶', label: 'Maternidade',           group: 'maternidade' },
+  caps:                   { color: '#63e6be', emoji: '🧩', label: 'CAPS',                 group: 'caps' },
+  instituto:              { color: '#a9e34b', emoji: '🔭', label: 'Instituto',             group: 'instituto' },
+  centro_especializado:   { color: '#74c0fc', emoji: '🩺', label: 'Centro Especializado', group: 'outros' },
+  oncologia:              { color: '#ff8787', emoji: '🎗️', label: 'Oncologia',             group: 'outros' },
+  transplantes:           { color: '#ffd43b', emoji: '💉', label: 'Transplantes',          group: 'outros' },
+  reabilitacao:           { color: '#69db7c', emoji: '♿', label: 'Reabilitação',          group: 'outros' },
+  hemoterapia:            { color: '#ff6b6b', emoji: '🩸', label: 'Hemoterapia',           group: 'outros' },
+  farmacia:               { color: '#69db7c', emoji: '💊', label: 'Farmácia',              group: 'outros' },
+  laboratorio:            { color: '#ffd43b', emoji: '🧪', label: 'Laboratório',           group: 'outros' },
+  fundacao:               { color: '#adb5bd', emoji: '🏛️', label: 'Fundação',              group: 'outros' },
+  nucleo:                 { color: '#adb5bd', emoji: '📡', label: 'Núcleo',                group: 'outros' },
+  regulacao:              { color: '#adb5bd', emoji: '📋', label: 'Regulação',             group: 'outros' },
+  secretaria:             { color: '#adb5bd', emoji: '🏢', label: 'Secretaria',            group: 'outros' },
+  administracao:          { color: '#adb5bd', emoji: '🏢', label: 'Administração',         group: 'outros' },
+  servico:                { color: '#adb5bd', emoji: '🔧', label: 'Serviço',               group: 'outros' },
+  unidade_movel:          { color: '#ffa94d', emoji: '🚐', label: 'Unidade Móvel',         group: 'outros' },
 };
 
-// Contagem por tipo
+// Fallback para tipos não mapeados
+function getCfg(tipo) {
+  return typeConfig[tipo] || { color: '#adb5bd', emoji: '🏥', label: tipo, group: 'outros' };
+}
+
+// ─── DADOS ────────────────────────────────────────────────────────────────────
+// Campo "link" adicionado em cada unidade. Preencha com a URL desejada.
+// Deixe link: "" para unidades sem redirecionamento.
+const unidades = [
+  { id: 1,  cnes: "0400475",  nome: "ADAB",                                                          tipo: "administracao",   bairro: "Ondina",          endereco: "Av. Adhemar de Barros, 967",                         telefone: "(71) 3194-2000", distrito: "Barra/Rio Verm.",      sus: false, link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0400475", lat: -13.003921, lng: -38.507342 },
+  { id: 2,  cnes: "4031415",  nome: "CEDAP – Centro Especializado em Diagnóstico, Assistência e Pesquisa", tipo: "centro_especializado", bairro: "Garcia", endereco: "R. Comendador José Alves Ferreira, 240",          telefone: "(71) 3116-8888", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=4031415", lat: -12.991245, lng: -38.513412 },
+  { id: 3,  cnes: "2385236",  nome: "Centro Estadual de Prevenção e Reabilitação da Pessoa com Deficiência", tipo: "reabilitacao", bairro: "Ondina",      endereco: "Av. Adhemar de Barros, s/n",                         telefone: "(71) 3117-0300", distrito: "Barra/Rio Verm.",      sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2385236", lat: -13.006452, lng: -38.507841 },
+  { id: 4,  cnes: "6354580",  nome: "Central Estadual de Regulação",                                 tipo: "regulacao",        bairro: "CAB",             endereco: "4ª Av. Centro Adm. da Bahia, 400",                   telefone: "(71) 3115-4100", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=6354580", lat: -12.949021, lng: -38.432585 },
+  { id: 5,  cnes: "7570538",  nome: "Central Estadual de Transplantes da Bahia",                     tipo: "transplantes",     bairro: "Horto Florestal", endereco: "R. Waldemar Falcão, 123",                            telefone: "(71) 3115-3194", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7570538", lat: -12.989252, lng: -38.488344 },
+  { id: 6,  cnes: "0430463",  nome: "Central Farmacêutica do Estado da Bahia – CEFARBA",             tipo: "farmacia",         bairro: "Simões Filho",    endereco: "Via Urbana, 1618 (CIA)",                             telefone: "(71) 3394-1420", distrito: "RMS",                  sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0430463", lat: -12.791245, lng: -38.401245 },
+  { id: 7,  cnes: "7095341",  nome: "CAPS – Gregório de Matos",                                      tipo: "caps",             bairro: "Garcia",          endereco: "Pç. Conselheiro Almeida Couto, s/n",                 telefone: "(71) 3117-6900", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7095341", lat: -12.977461, lng: -38.503461 },
+  { id: 8,  cnes: "2498049",  nome: "CEDEBA – Centro de Diabetes e Endocrinologia da Bahia",         tipo: "centro_especializado", bairro: "Brotas",      endereco: "Av. ACM, s/n (HGE)",                                 telefone: "(71) 3103-6000", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2498049", lat: -13.001925, lng: -38.493922 },
+  { id: 9,  cnes: "2470845",  nome: "CIATOX – Centro de Informações e Assistência Toxicológica",     tipo: "centro_especializado", bairro: "Brotas",      endereco: "Av. Vasco da Gama, s/n (HGE)",                       telefone: "0800 284 4343",  distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2470845", lat: -13.001925, lng: -38.493922 },
+  { id: 10, cnes: "0003972",  nome: "Centro de Parto Humanizado João Batista Caribé",                tipo: "maternidade",      bairro: "Coutos",          endereco: "Av. Afrânio Peixoto, s/n",                           telefone: "(71) 3117-8025", distrito: "Subúrbio Ferroviário", sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003972", lat: -12.871030, lng: -38.479540 },
+  { id: 11, cnes: "4148398",  nome: "Centro Estadual de Referência – Doença Falciforme",             tipo: "centro_especializado", bairro: "Garcia",      endereco: "R. Comendador José Alves Ferreira, s/n",             telefone: "(71) 3116-8888", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=4148398", lat: -12.991245, lng: -38.513412 },
+  { id: 12, cnes: "2557894",  nome: "CEREST – Centro Estadual de Referência em Saúde do Trabalhador",tipo: "centro_especializado", bairro: "Canela",      endereco: "R. Pedro Lessa, 123",                                telefone: "(71) 3116-5000", distrito: "Barra/Rio Verm.",      sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2557894", lat: -12.994215, lng: -38.517842 },
+  { id: 13, cnes: "0003921",  nome: "CICAN",                                                         tipo: "oncologia",        bairro: "Brotas",          endereco: "Av. Vasco da Gama, s/n",                             telefone: "(71) 3116-5400", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003921", lat: -13.001925, lng: -38.493922 },
+  { id: 14, cnes: "0007609",  nome: "CIMEB – Centro de Infusões e Medicamentos Especializados",      tipo: "centro_especializado", bairro: "Garcia",      endereco: "R. Comendador José Alves Ferreira, s/n",             telefone: "(71) 3116-8888", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0007609", lat: -12.991245, lng: -38.513412 },
+  { id: 15, cnes: "0005398",  nome: "CREASI",                                                        tipo: "centro_especializado", bairro: "Brotas",      endereco: "Av. ACM, s/n (HGE)",                                 telefone: "(71) 3103-6100", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0005398", lat: -13.001925, lng: -38.493922 },
+  { id: 16, cnes: "3490971",  nome: "CTMO – Centro de Transplante de Medula Óssea",                  tipo: "transplantes",     bairro: "Pau Miúdo",       endereco: "R. Marquês de Maricá, s/n",                          telefone: "(71) 3117-7500", distrito: "Liberdade",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=3490971", lat: -12.951576, lng: -38.455246 },
+  { id: 17, cnes: "5741920",  nome: "FAMAR – Farmácia Ambulatorial de Medicamentos Respiratórios",   tipo: "farmacia",         bairro: "Brotas",          endereco: "Av. Vasco da Gama, s/n",                             telefone: "(71) 3116-5400", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=5741920", lat: -13.001925, lng: -38.493922 },
+  { id: 18, cnes: "9911936",  nome: "FESF – Fundação Estatal Saúde da Família da Bahia",             tipo: "fundacao",         bairro: "CAB",             endereco: "Av. Luiz Viana Filho, 445",                          telefone: "(71) 3417-3500", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=9911936", lat: -12.948215, lng: -38.431245 },
+  { id: 19, cnes: "0006149",  nome: "Fundação HEMOBA",                                               tipo: "hemoterapia",      bairro: "Vasco da Gama",   endereco: "Ladeira do Hospital Geral, s/n",                     telefone: "(71) 3116-6000", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0006149", lat: -13.001925, lng: -38.493922 },
+  { id: 20, cnes: "0003875",  nome: "Hospital Ana Nery",                                             tipo: "hospital",         bairro: "Caixa D'Água",    endereco: "R. Saldanha Marinho, s/n",                           telefone: "(71) 3117-2000", distrito: "Lib./Pau Miúdo",       sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003875", lat: -12.955431, lng: -38.496582 },
+  { id: 21, cnes: "0106496",  nome: "Hospital de Campanha COVID-19 – Fonte Nova",                    tipo: "hospital",         bairro: "Nazaré",          endereco: "Ladeira da Fonte das Pedras, s/n",                   telefone: "(71) 3052-1925", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0106496", lat: -12.978939, lng: -38.504192 },
+  { id: 22, cnes: "6595197",  nome: "Hospital do Subúrbio",                                          tipo: "hospital",         bairro: "Periperi",        endereco: "R. das Pedrinhas, s/n",                              telefone: "(71) 3218-3900", distrito: "Subúrbio Ferroviário", sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=6595197", lat: -12.873200, lng: -38.468241 },
+  { id: 23, cnes: "0003980",  nome: "Hospital Eládio Lasserre",                                      tipo: "hospital",         bairro: "Águas Claras",    endereco: "R. Prof. José Maria de Magalhães Neto, s/n",         telefone: "(71) 3402-5350", distrito: "Cajazeiras",           sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003980", lat: -12.905663, lng: -38.411690 },
+  { id: 24, cnes: "2799073",  nome: "Hospital Especializado Dom Rodrigo de Menezes",                 tipo: "hospital_especializado", bairro: "Águas Claras", endereco: "R. Via Regional, s/n",                            telefone: "(71) 3117-8025", distrito: "Pau da Lima",          sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2799073", lat: -12.916738, lng: -38.411132 },
+  { id: 25, cnes: "0005436",  nome: "Hospital Especializado Mário Leal",                             tipo: "hospital_especializado", bairro: "IAPI",        endereco: "R. Conde de Porto Alegre, s/n",                      telefone: "(71) 3116-4100", distrito: "Lib./Pau Miúdo",       sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0005436", lat: -12.964724, lng: -38.484218 },
+  { id: 26, cnes: "0004065",  nome: "Hospital Especializado Octávio Mangabeira",                     tipo: "hospital_especializado", bairro: "Pau Miúdo",   endereco: "Pç. Conselheiro Almeida Couto, s/n",                 telefone: "(71) 3117-2512", distrito: "Liberdade",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004065", lat: -12.951508, lng: -38.487823 },
+  { id: 27, cnes: "0106526",  nome: "Hospital Estadual 2 de Julho",                                  tipo: "hospital",         bairro: "Trobogy",         endereco: "R. Mocambo, s/n",                                    telefone: "(71) 3507-6450", distrito: "Pau da Lima",          sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0106526", lat: -12.930491, lng: -38.397664 },
+  { id: 28, cnes: "0003778",  nome: "Hospital Estadual da Mulher",                                   tipo: "hospital",         bairro: "Roma",            endereco: "R. do Uruguay, 27",                                  telefone: "(71) 3034-5000", distrito: "Cidade Baixa",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003778", lat: -12.937011, lng: -38.506602 },
+  { id: 29, cnes: "0004294",  nome: "Hospital Geral do Estado",                                      tipo: "hospital",         bairro: "Brotas",          endereco: "Av. Vasco da Gama, s/n",                             telefone: "(71) 3117-2015", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004294", lat: -13.001925, lng: -38.493922 },
+  { id: 30, cnes: "0004073",  nome: "Hospital Geral Ernesto Simões Filho",                           tipo: "hospital",         bairro: "Pau Miúdo",       endereco: "R. Marquês de Maricá, s/n",                          telefone: "(71) 3117-2512", distrito: "Liberdade",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004073", lat: -12.951508, lng: -38.487823 },
+  { id: 31, cnes: "0003859",  nome: "Hospital Geral Roberto Santos",                                 tipo: "hospital",         bairro: "Cabula",          endereco: "R. Direta do Saboeiro, s/n",                         telefone: "(71) 3117-7500", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003859", lat: -12.951576, lng: -38.455246 },
+  { id: 32, cnes: "0004286",  nome: "Hospital Juliano Moreira",                                      tipo: "hospital_psiquiatrico", bairro: "Narandiba",   endereco: "Av. Edgard Santos, s/n",                             telefone: "(71) 3103-3900", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004286", lat: -12.943125, lng: -38.441258 },
+  { id: 33, cnes: "2493845",  nome: "Hospital Manoel Victorino",                                     tipo: "hospital",         bairro: "Nazaré",          endereco: "Pç. Conselheiro Almeida Couto, 400",                 telefone: "(71) 3117-1000", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2493845", lat: -12.977461, lng: -38.503461 },
+  { id: 34, cnes: "4982150",  nome: "Hospital Mont Serrat",                                          tipo: "hospital",         bairro: "Mont Serrat",     endereco: "R. Rio de Janeiro, 01",                              telefone: "(71) 3045-3100", distrito: "Itapagipe",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=4982150", lat: -12.928876, lng: -38.517316 },
+  { id: 35, cnes: "4446321",  nome: "Hospital Ortopédico do Estado da Bahia",                        tipo: "hospital_especializado", bairro: "CAB",         endereco: "Rua do Hospital, s/n",                               telefone: "(71) 3115-4180", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=4446321", lat: -12.946324, lng: -38.431215 },
+  { id: 36, cnes: "0004987",  nome: "Hospital Professor Carvalho Luz",                               tipo: "hospital",         bairro: "Nazaré",          endereco: "R. J. J. Seabra, s/n",                               telefone: "(71) 3117-1000", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004987", lat: -12.976008, lng: -38.504958 },
+  { id: 37, cnes: "0131350",  nome: "Hospital Santa Clara",                                          tipo: "hospital",         bairro: "Bonfim",          endereco: "Av. Dendezeiros, s/n",                               telefone: "(71) 3116-2917", distrito: "Itapagipe",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0131350", lat: -12.928135, lng: -38.507412 },
+  { id: 38, cnes: "0005428",  nome: "Instituto Couto Maia",                                          tipo: "instituto",        bairro: "Cajazeiras",      endereco: "R. Recanto da Lagoa, s/n",                           telefone: "(71) 3117-2000", distrito: "Cajazeiras",           sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0005428", lat: -12.895315, lng: -38.375624 },
+  { id: 39, cnes: "0003794",  nome: "Instituto de Perinatologia da Bahia",                           tipo: "instituto",        bairro: "Vila Matos",      endereco: "R. Conselheiro Pedro Luiz, s/n",                     telefone: "(71) 3116-2000", distrito: "Rio Vermelho",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003794", lat: -13.011425, lng: -38.490124 },
+  { id: 40, cnes: "0004162",  nome: "LACEN – Laboratório Central de Saúde Pública Prof. Gonçalo Muniz", tipo: "laboratorio", bairro: "Horto Florestal", endereco: "R. Waldemar Falcão, 123",                            telefone: "(71) 3116-5900", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004162", lat: -12.989252, lng: -38.488344 },
+  { id: 41, cnes: "0003840",  nome: "Maternidade Albert Sabin",                                      tipo: "maternidade",      bairro: "Cajazeiras",      endereco: "Estr. do Coqueiro Grande, s/n",                      telefone: "(71) 3253-5350", distrito: "Cajazeiras",           sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003840", lat: -12.906660, lng: -38.375250 },
+  { id: 42, cnes: "0004731",  nome: "Maternidade Climério de Oliveira",                              tipo: "maternidade",      bairro: "Nazaré",          endereco: "R. do Limoeiro, 137",                                telefone: "(71) 3283-9200", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004731", lat: -12.975480, lng: -38.503950 },
+  { id: 43, cnes: "0004081",  nome: "Maternidade Maria da Conceição de Jesus",                       tipo: "maternidade",      bairro: "Coutos",          endereco: "Av. Afrânio Peixoto, 1492",                          telefone: "(71) 3307-8602", distrito: "Subúrbio Ferroviário", sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004081", lat: -12.871030, lng: -38.479540 },
+  { id: 44, cnes: "3956369",  nome: "Maternidade Professor José Maria de Magalhães Neto",            tipo: "maternidade",      bairro: "Pau Miúdo",       endereco: "R. Marquês de Maricá, s/n",                          telefone: "(71) 3255-0810", distrito: "Liberdade",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=3956369", lat: -12.951150, lng: -38.487840 },
+  { id: 45, cnes: "0004170",  nome: "Maternidade Tsylla Balbino",                                    tipo: "maternidade",      bairro: "Baixa de Quintas",endereco: "Ladeira Quintas dos Lázaros, s/n",                   telefone: "(71) 3116-2068", distrito: "Lib./Pau Miúdo",       sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004170", lat: -12.963490, lng: -38.494790 },
+  { id: 46, cnes: "7613881",  nome: "Núcleo de Telessaúde do Estado da Bahia",                       tipo: "nucleo",           bairro: "Horto Florestal", endereco: "R. Waldemar Falcão, 123",                            telefone: "(71) 3115-3194", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7613881", lat: -12.989252, lng: -38.488344 },
+  { id: 47, cnes: "4031407",  nome: "Núcleo Regional de Saúde Leste – Salvador Sede",                tipo: "nucleo",           bairro: "Comércio",        endereco: "Av. Estados Unidos, 128",                            telefone: "(71) 3103-7100", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=4031407", lat: -12.969634, lng: -38.512683 },
+  { id: 48, cnes: "2942208",  nome: "Policlínica de Escada",                                         tipo: "policlinica",      bairro: "Escada",          endereco: "Av. Afrânio Peixoto, s/n",                           telefone: "0800 071 5353",  distrito: "Subúrbio",             sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2942208", lat: -12.863116, lng: -38.486242 },
+  { id: 49, cnes: "2942585",  nome: "Policlínica de Narandiba",                                      tipo: "policlinica",      bairro: "Narandiba",       endereco: "Av. Edgard Santos, s/n",                             telefone: "0800 071 5353",  distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=2942585", lat: -12.946747, lng: -38.441014 },
+  { id: 50, cnes: "7106521",  nome: "Secretaria da Saúde do Estado da Bahia",                        tipo: "secretaria",       bairro: "CAB",             endereco: "4ª Av. Centro Adm. da Bahia, 400",                   telefone: "(71) 3115-4180", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7106521", lat: -12.949021, lng: -38.432585 },
+  { id: 51, cnes: "9709037",  nome: "Serviço de Verificação de Óbito de Salvador e RMS",             tipo: "servico",          bairro: "Garcia",          endereco: "Av. Centenário (Complexo IML), s/n",                 telefone: "(71) 3116-4601", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=9709037", lat: -12.990426, lng: -38.508546 },
+  { id: 52, cnes: "0007587",  nome: "Unidade de Emergência Mãe Hilda Jitolu",                        tipo: "upa",              bairro: "Liberdade",       endereco: "Rua Direta do Curuzu, s/n",                          telefone: "(71) 3117-6950", distrito: "Liberdade",            sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0007587", lat: -12.948216, lng: -38.490741 },
+  { id: 53, cnes: "0004456",  nome: "Unidade de Emergência Prof. Hosanah d'Oliveira",                tipo: "upa",              bairro: "Federação",       endereco: "R. Caquende, s/n",                                   telefone: "(71) 3283-8386", distrito: "Brotas",               sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0004456", lat: -12.994647, lng: -38.503612 },
+  { id: 54, cnes: "0005363",  nome: "UPA 24h – São Caetano",                                         tipo: "upa",              bairro: "São Caetano",     endereco: "R. Eng. Austricliano, s/n",                          telefone: "(71) 3233-1498", distrito: "São Caetano/Valéria",  sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0005363", lat: -12.932971, lng: -38.486241 },
+  { id: 55, cnes: "0003913",  nome: "Unidade de Emergência Gercino Coelho",                          tipo: "upa",              bairro: "Pirajá",          endereco: "Rua 8 de Novembro, s/n",                             telefone: "(71) 3117-2589", distrito: "São Caetano/Valéria",  sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=0003913", lat: -12.9157297, lng: -38.4556488 },
+  { id: 56, cnes: "9401520",  nome: "Unidade Móvel do Hospital da Mulher",                           tipo: "unidade_movel",    bairro: "Roma",            endereco: "R. do Uruguay, 27",                                  telefone: "(71) 3034-5005", distrito: "Cidade Baixa",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=9401520", lat: -12.9370119, lng: -38.5066029 },
+  { id: 57, cnes: "6995160",  nome: "UPA de Roma",                                                   tipo: "upa",              bairro: "Roma",            endereco: "R. de Santa Rita, s/n",                              telefone: "(71) 3116-2917", distrito: "Cidade Baixa",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=6995160", lat: -12.937864, lng: -38.506251 },
+  { id: 58, cnes: "7596871",  nome: "UPA 24h Cabula (Arraial do Retiro)",                            tipo: "upa",              bairro: "Cabula",          endereco: "R. Silveira Martins, s/n",                           telefone: "(71) 3233-1498", distrito: "Cabula/Beiru",         sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7596871", lat: -12.957128, lng: -38.451427 },
+  { id: 59, cnes: "7112548",  nome: "VIVER – Serviço de Atenção a Pessoas em Situação de Violência Sexual", tipo: "servico", bairro: "Garcia",          endereco: "Av. Centenário (Ed. IML), s/n",                      telefone: "(71) 3117-6700", distrito: "Centro Histórico",     sus: true,  link: "https://cnes2.datasus.gov.br/Mod_Conjunto.asp?VCo_Unidade=7112548", lat: -12.990426, lng: -38.508546 },
+];
+
+// ─── GRUPOS DE FILTRO ─────────────────────────────────────────────────────────
+// Mapeia cada tipo ao botão de filtro correspondente
+const typeToGroup = {};
+Object.entries(typeConfig).forEach(([tipo, cfg]) => { typeToGroup[tipo] = cfg.group; });
+
+// ─── CONTAGENS ────────────────────────────────────────────────────────────────
 const counts = {};
-unidades.forEach(u => { counts[u.tipo] = (counts[u.tipo]||0)+1; });
+unidades.forEach(u => {
+  const g = typeToGroup[u.tipo] || 'outros';
+  counts[g] = (counts[g]||0)+1;
+});
 document.getElementById('countHospital').textContent = counts.hospital || 0;
-document.getElementById('countUpa').textContent = counts.upa || 0;
-document.getElementById('countUbs').textContent = counts.ubs || 0;
-document.getElementById('countPoli').textContent = (counts.policlinica||0) + (counts.maternidade||0);
+document.getElementById('countUpa').textContent      = counts.upa || 0;
+document.getElementById('countUbs').textContent      = counts.ubs || 0;
+document.getElementById('countPoli').textContent     = (counts.policlinica||0) + (counts.maternidade||0);
 
-// ─── LEAFLET MAP ──────────────────────────────────────────────────────────────
+// ─── MAPA ─────────────────────────────────────────────────────────────────────
 const map = L.map('map', { zoomControl: true }).setView([-12.9716, -38.5016], 12);
-
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap &copy; CARTO',
-  subdomains: 'abcd',
-  maxZoom: 19
+  attribution: '&copy; OpenStreetMap &copy; CARTO', subdomains: 'abcd', maxZoom: 19
 }).addTo(map);
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
-let activeFilters = new Set(['hospital','upa','ubs','policlinica','maternidade']);
-let searchQuery = '';
-let selectedId = null;
-const markers = {};
+// ─── ESTADO ───────────────────────────────────────────────────────────────────
+let activeFilters = new Set(['hospital','upa','ubs','policlinica','maternidade','caps','hospital_especializado','instituto','outros']);
+let searchQuery   = '';
+let selectedId    = null;
+const markers     = {};
 
-// ─── MARKER ICONS ─────────────────────────────────────────────────────────────
+// ─── ÍCONES ───────────────────────────────────────────────────────────────────
 function makeIcon(tipo) {
-  const cfg = typeConfig[tipo];
+  const cfg = getCfg(tipo);
   const html = `<div style="
-    width:34px; height:34px;
+    width:34px;height:34px;
     background:${cfg.color};
     border-radius:50% 50% 50% 0;
     transform:rotate(-45deg);
-    display:flex; align-items:center; justify-content:center;
+    display:flex;align-items:center;justify-content:center;
     border:2px solid rgba(255,255,255,0.35);
-    box-shadow:0 3px 10px rgba(0,0,0,0.5);
+    box-shadow:0 3px 10px rgba(0,0,0,0.45);
   "><span style="transform:rotate(45deg);font-size:14px;">${cfg.emoji}</span></div>`;
   return L.divIcon({ html, className:'', iconSize:[34,34], iconAnchor:[17,34], popupAnchor:[0,-34] });
 }
 
-// ─── BUILD MARKERS ────────────────────────────────────────────────────────────
+// ─── MARKERS ──────────────────────────────────────────────────────────────────
 unidades.forEach(u => {
-  const cfg = typeConfig[u.tipo];
-  const marker = L.marker([u.lat, u.lng], { icon: makeIcon(u.tipo) });
+  const cfg = getCfg(u.tipo);
+  // Validação de coordenadas
+  if (!u.lat || !u.lng || isNaN(u.lat) || isNaN(u.lng)) return;
 
+  const marker = L.marker([u.lat, u.lng], { icon: makeIcon(u.tipo) });
   marker.bindPopup(`
     <div class="l-popup-type" style="color:${cfg.color}">${cfg.label}</div>
     <div class="l-popup-name">${u.nome}</div>
     <div class="l-popup-addr">📍 ${u.endereco} — ${u.bairro}</div>
-    ${u.fichaUrl ? `<div style="margin-top:6px;"><a href="${u.fichaUrl}" target="_blank" style="color:#9b72ff;font-size:12px;font-weight:600;">📋 Ver Ficha do Estabelecimento</a></div>` : ''}
+    ${u.link ? `<div style="margin-top:8px;"><a href="${u.link}" target="_blank" style="color:#40c057;font-size:12px;font-weight:600;">🔗 Acessar Link</a></div>` : ''}
   `);
-
   marker.on('click', () => showPanel(u.id));
   markers[u.id] = marker;
   marker.addTo(map);
 });
 
-// ─── PANEL ────────────────────────────────────────────────────────────────────
+// ─── PAINEL LATERAL ───────────────────────────────────────────────────────────
 function showPanel(id) {
   const u = unidades.find(x => x.id === id);
   if (!u) return;
-  const cfg = typeConfig[u.tipo];
+  const cfg = getCfg(u.tipo);
   selectedId = id;
 
-  document.getElementById('pType').textContent = cfg.label;
-  document.getElementById('pType').style.color = cfg.color;
-  document.getElementById('pName').textContent = u.nome;
-  document.getElementById('pAddr').textContent = u.endereco;
-  document.getElementById('pBairro').textContent = u.bairro;
-  document.getElementById('pPhone').textContent = u.telefone || '—';
-  document.getElementById('pPhoneRow').style.display = u.telefone ? 'flex' : 'none';
+  document.getElementById('pType').textContent    = cfg.label;
+  document.getElementById('pType').style.color    = cfg.color;
+  document.getElementById('pName').textContent    = u.nome;
+  document.getElementById('pAddr').textContent    = u.endereco;
+  document.getElementById('pBairro').textContent  = u.bairro;
+  document.getElementById('pPhone').textContent   = u.telefone || '—';
+  document.getElementById('pPhoneRow').style.display   = u.telefone ? 'flex' : 'none';
   document.getElementById('pDistrito').textContent = 'Distrito Sanitário ' + u.distrito;
   document.getElementById('pMapsLink').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(u.nome + ' Salvador Bahia')}`;
+
+  // Link externo configurável por unidade
+  const extLink  = document.getElementById('pExternalLink');
+  const linkRow  = document.getElementById('pLinkRow');
+  if (u.link) {
+    extLink.href          = u.link;
+    extLink.style.display = 'inline-flex';
+    linkRow.style.display = 'flex';
+    document.getElementById('pLinkLabel').textContent = u.link;
+  } else {
+    extLink.style.display = 'none';
+    linkRow.style.display = 'none';
+  }
+
+  // Ficha CNES
   const fichaLink = document.getElementById('pFichaLink');
   if (u.fichaUrl) {
     fichaLink.href = u.fichaUrl;
@@ -238,15 +460,15 @@ function showPanel(id) {
   } else {
     fichaLink.style.display = 'none';
   }
+
   document.getElementById('infoPanel').classList.add('visible');
 
-  // highlight card
   document.querySelectorAll('.unit-card').forEach(c => c.classList.remove('active'));
   const card = document.getElementById('card-' + id);
-  if (card) { card.classList.add('active'); card.scrollIntoView({block:'nearest', behavior:'smooth'}); }
+  if (card) { card.classList.add('active'); card.scrollIntoView({ block:'nearest', behavior:'smooth' }); }
 
   map.setView([u.lat, u.lng], 15, { animate: true });
-  markers[id].openPopup();
+  if (markers[id]) markers[id].openPopup();
 }
 
 function closePanel() {
@@ -254,24 +476,25 @@ function closePanel() {
   selectedId = null;
 }
 
-// ─── RENDER LIST ──────────────────────────────────────────────────────────────
+// ─── LISTA ────────────────────────────────────────────────────────────────────
 function renderList() {
   const list = document.getElementById('unitsList');
-  const q = searchQuery.toLowerCase();
+  const q    = searchQuery.toLowerCase();
 
   const filtered = unidades.filter(u => {
-    if (!activeFilters.has(u.tipo)) return false;
-    if (q && !u.nome.toLowerCase().includes(q) && !u.bairro.toLowerCase().includes(q) && !typeConfig[u.tipo].label.toLowerCase().includes(q)) return false;
+    const group = typeToGroup[u.tipo] || 'outros';
+    if (!activeFilters.has(group)) return false;
+    if (q && !u.nome.toLowerCase().includes(q) && !u.bairro.toLowerCase().includes(q) && !getCfg(u.tipo).label.toLowerCase().includes(q)) return false;
     return true;
   });
 
   document.getElementById('visibleCount').textContent = filtered.length;
 
-  // Show/hide markers
   unidades.forEach(u => {
+    if (!markers[u.id]) return;
     const show = filtered.some(f => f.id === u.id);
-    if (show) { if (!map.hasLayer(markers[u.id])) markers[u.id].addTo(map); }
-    else { if (map.hasLayer(markers[u.id])) map.removeLayer(markers[u.id]); }
+    if (show)  { if (!map.hasLayer(markers[u.id])) markers[u.id].addTo(map); }
+    else       { if (map.hasLayer(markers[u.id]))  map.removeLayer(markers[u.id]); }
   });
 
   if (filtered.length === 0) {
@@ -280,7 +503,7 @@ function renderList() {
   }
 
   list.innerHTML = filtered.map(u => {
-    const cfg = typeConfig[u.tipo];
+    const cfg = getCfg(u.tipo);
     return `
       <div class="unit-card ${selectedId===u.id?'active':''}" id="card-${u.id}" onclick="showPanel(${u.id}); map.closePopup();">
         <div class="card-top">
@@ -291,16 +514,15 @@ function renderList() {
             <div class="card-address">📍 ${u.bairro} · ${u.endereco}</div>
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
-// ─── FILTERS ─────────────────────────────────────────────────────────────────
+// ─── FILTROS ─────────────────────────────────────────────────────────────────
 function toggleFilter(btn) {
   const tipo = btn.dataset.type;
   if (activeFilters.has(tipo)) {
-    if (activeFilters.size <= 1) return; // keep at least one
+    if (activeFilters.size <= 1) return;
     activeFilters.delete(tipo);
     btn.classList.remove('active');
   } else {
@@ -310,7 +532,7 @@ function toggleFilter(btn) {
   renderList();
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────────────────────
+// ─── BUSCA ────────────────────────────────────────────────────────────────────
 document.getElementById('searchInput').addEventListener('input', e => {
   searchQuery = e.target.value;
   renderList();
@@ -320,3 +542,4 @@ document.getElementById('searchInput').addEventListener('input', e => {
 renderList();
 </script>
 </body>
+</html>

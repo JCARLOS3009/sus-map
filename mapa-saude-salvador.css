@@ -1,18 +1,18 @@
-    :root {
-      --bg: #0a0f1a;
-      --surface: #111827;
-      --surface2: #1a2235;
-      --border: rgba(255,255,255,0.07);
-      --text: #e8edf5;
-      --muted: #8898aa;
-      --accent: #00d4aa;
-      --accent2: #f4c842;
+:root {
+      --bg: #f0f4f8;
+      --surface: #ffffff;
+      --surface2: #e8eef5;
+      --border: rgba(0,0,0,0.09);
+      --text: #1a2332;
+      --muted: #6b7a8d;
+      --accent: #00a688;
+      --accent2: #e0ac00;
 
-      --hospital: #ff6b6b;
-      --upa: #ffa94d;
-      --ubs: #4dabf7;
-      --policlinica: #9b72ff;
-      --maternidade: #f783ac;
+      --hospital: #e84545;
+      --upa: #f08c00;
+      --ubs: #1c8ae0;
+      --policlinica: #7c4dff;
+      --maternidade: #e8368c;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -196,9 +196,9 @@
     }
 
     .filter-btn.active {
-      border-color: rgba(255,255,255,0.2);
+      border-color: rgba(0,0,0,0.15);
       color: var(--text);
-      background: rgba(255,255,255,0.05);
+      background: rgba(0,0,0,0.04);
     }
 
     .filter-btn.active.hospital { border-color: var(--hospital); color: var(--hospital); }
@@ -254,7 +254,7 @@
 
     .unit-card.active {
       background: var(--surface2);
-      border-color: rgba(0, 212, 170, 0.3);
+      border-color: rgba(0, 166, 136, 0.4);
     }
 
     .card-top {
@@ -310,7 +310,7 @@
     /* MAP */
     #map {
       flex: 1;
-      background: #0d1520;
+      background: #e0e8f0;
     }
 
     /* INFO POPUP overlay */
@@ -325,7 +325,7 @@
       border-radius: 12px;
       padding: 20px;
       z-index: 2000;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
       animation: slideUp 0.2s ease;
     }
 
@@ -422,7 +422,7 @@
       align-items: center;
       justify-content: center;
       border: 2px solid rgba(255,255,255,0.3);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .custom-marker .inner {
@@ -435,7 +435,7 @@
       background: var(--surface) !important;
       border: 1px solid var(--border) !important;
       border-radius: 10px !important;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5) !important;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;
       color: var(--text) !important;
     }
 
